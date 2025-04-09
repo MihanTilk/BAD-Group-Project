@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Restaurant Ordering System{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Restaurant!</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+        </nav>
+    </header>
+    {% block content %}{% endblock %}
+</body>
+</html>
+
