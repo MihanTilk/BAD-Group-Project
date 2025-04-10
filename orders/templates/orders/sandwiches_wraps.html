@@ -1,0 +1,77 @@
+{% extends 'orders/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Sandwiches & Wraps</h2>
+
+        <div class="row">
+            <!-- Grilled Cheese Sandwich -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Grilled Cheese Sandwich</h5>
+                        <p class="card-text">LKR 700</p>
+                        <img src="{% static 'images/Grilled_Cheese_Sandwich.jpg' %}" class="card-img-top" alt="Grilled Cheese Sandwich">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Philly Cheesesteak -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Philly Cheesesteak</h5>
+                        <p class="card-text">LKR 1,200</p>
+                        <img src="{% static 'images/Philly_Cheesesteak.jpg' %}" class="card-img-top" alt="Philly Cheesesteak">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Club Sandwich -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Club Sandwich</h5>
+                        <p class="card-text">LKR 1,000</p>
+                        <img src="{% static 'images/Club_Sandwich.jpg' %}" class="card-img-top" alt="Club Sandwich">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pulled Pork Sandwich -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Pulled Pork Sandwich</h5>
+                        <p class="card-text">LKR 1,150</p>
+                        <img src="{% static 'images/Pulled_Pork_Sandwich.jpg' %}" class="card-img-top" alt="Pulled Pork Sandwich">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chicken Wrap with Garlic Sauce -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Chicken Wrap with Garlic Sauce</h5>
+                        <p class="card-text">LKR 950</p>
+                        <img src="{% static 'images/Chicken_Wrap_with_Garlic_Sauce.jpg' %}" class="card-img-top" alt="Chicken Wrap with Garlic Sauce">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toasted Tuna Melt -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Toasted Tuna Melt</h5>
+                        <p class="card-text">LKR 950</p>
+                        <img src="{% static 'images/Toasted_Tuna_Melt.jpg' %}" class="card-img-top" alt="Toasted Tuna Melt">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

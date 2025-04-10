@@ -1,0 +1,88 @@
+{% extends 'orders/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Sides & Snacks</h2>
+
+        <div class="row">
+            <!-- Mashed Potatoes with Gravy -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mashed Potatoes with Gravy</h5>
+                        <p class="card-text">LKR 500</p>
+                        <img src="{% static 'images/Mashed_Potatoes_with_Gravy.jpg' %}" class="card-img-top" alt="Mashed Potatoes with Gravy">
+                    </div>
+                </div>
+            </div>
+
+            <!-- French Fries / Wedges / Curly Fries -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">French Fries / Wedges / Curly Fries</h5>
+                        <p class="card-text">LKR 450</p>
+                        <img src="{% static 'images/French_Fries.jpg' %}" class="card-img-top" alt="French Fries">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onion Rings -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Onion Rings</h5>
+                        <p class="card-text">LKR 500</p>
+                        <img src="{% static 'images/Onion_Rings.jpg' %}" class="card-img-top" alt="Onion Rings">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coleslaw -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Coleslaw</h5>
+                        <p class="card-text">LKR 350</p>
+                        <img src="{% static 'images/Coleslaw.jpg' %}" class="card-img-top" alt="Coleslaw">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttered Corn -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Buttered Corn</h5>
+                        <p class="card-text">LKR 400</p>
+                        <img src="{% static 'images/Buttered_Corn.jpg' %}" class="card-img-top" alt="Buttered Corn">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Garlic Bread -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Garlic Bread</h5>
+                        <p class="card-text">LKR 450</p>
+                        <img src="{% static 'images/Garlic_Bread.jpg' %}" class="card-img-top" alt="Garlic Bread">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loaded Nachos -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Loaded Nachos</h5>
+                        <p class="card-text">LKR 1,100</p>
+                        <img src="{% static 'images/Loaded_Nachos.jpg' %}" class="card-img-top" alt="Loaded Nachos">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

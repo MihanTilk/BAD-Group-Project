@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Dishes - Warm & Whisked</title>
-    <!-- Bootstrap CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="font-family: 'Segoe UI', sans-serif; background-color: #fffdf8;">
+{% extends 'base.html' %}
 
+{% load static %}
+
+{% block title %}Main Dishes - Warm & Whisked{% endblock %}
+
+{% block content %}
     <!-- Page Header -->
     <div class="bg-dark text-white text-center py-5">
         <h1 class="display-4 fw-bold">Main Dishes</h1>
@@ -18,17 +14,126 @@
     <!-- Main Dishes Menu -->
     <div class="container my-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for dish in dishes %}
-                <div class="col">
-                    <div class="card shadow">
-                        <img src="{{ dish.image }}" class="card-img-top" alt="{{ dish.name }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ dish.name }}</h5>
-                            <p class="card-text">Price: LKR {{ dish.price }}</p>
-                        </div>
+            <!-- Mac & Cheese (Classic) -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Mac_and_Cheese_Classic.jpg' %}" class="card-img-top" alt="Mac & Cheese (Classic)">
+                    <div class="card-body">
+                        <h5 class="card-title">Mac & Cheese (classic)</h5>
+                        <p class="card-text">Price: LKR 850</p>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
+
+            <!-- Mac & Cheese (Bacon/Truffle/Jalapeño) -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Mac_and_Cheese_Bacon.jpg' %}" class="card-img-top" alt="Mac & Cheese (Bacon/Truffle/Jalapeño)">
+                    <div class="card-body">
+                        <h5 class="card-title">Mac & Cheese (bacon/truffle/jalapeño)</h5>
+                        <p class="card-text">Price: LKR 1,100</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chicken Pot Pie -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Chicken_Pot_Pie.jpg' %}" class="card-img-top" alt="Chicken Pot Pie">
+                    <div class="card-body">
+                        <h5 class="card-title">Chicken Pot Pie</h5>
+                        <p class="card-text">Price: LKR 1,250</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beef Stew -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Beef_Stew.jpg' %}" class="card-img-top" alt="Beef Stew">
+                    <div class="card-body">
+                        <h5 class="card-title">Beef Stew</h5>
+                        <p class="card-text">Price: LKR 1,350</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shepherd’s Pie -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Shepherds_Pie.jpg' %}" class="card-img-top" alt="Shepherd’s Pie">
+                    <div class="card-body">
+                        <h5 class="card-title">Shepherd’s Pie</h5>
+                        <p class="card-text">Price: LKR 1,200</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fried Chicken & Waffles -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Fried_Chicken_and_Waffles.jpg' %}" class="card-img-top" alt="Fried Chicken & Waffles">
+                    <div class="card-body">
+                        <h5 class="card-title">Fried Chicken & Waffles</h5>
+                        <p class="card-text">Price: LKR 1,400</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meatloaf with Gravy -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Meatloaf_with_Gravy.jpg' %}" class="card-img-top" alt="Meatloaf with Gravy">
+                    <div class="card-body">
+                        <h5 class="card-title">Meatloaf with Gravy</h5>
+                        <p class="card-text">Price: LKR 1,300</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spaghetti & Meatballs -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Spaghetti_and_Meatballs.jpg' %}" class="card-img-top" alt="Spaghetti & Meatballs">
+                    <div class="card-body">
+                        <h5 class="card-title">Spaghetti & Meatballs</h5>
+                        <p class="card-text">Price: LKR 1,150</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baked Ziti -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Baked_Ziti.jpg' %}" class="card-img-top" alt="Baked Ziti">
+                    <div class="card-body">
+                        <h5 class="card-title">Baked Ziti</h5>
+                        <p class="card-text">Price: LKR 1,100</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stuffed Bell Peppers -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Stuffed_Bell_Peppers.jpg' %}" class="card-img-top" alt="Stuffed Bell Peppers">
+                    <div class="card-body">
+                        <h5 class="card-title">Stuffed Bell Peppers</h5>
+                        <p class="card-text">Price: LKR 1,000</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lasagna -->
+            <div class="col">
+                <div class="card shadow">
+                    <img src="{% static 'images/Lasagna.jpg' %}" class="card-img-top" alt="Lasagna">
+                    <div class="card-body">
+                        <h5 class="card-title">Lasagna (beef/veg/chicken)</h5>
+                        <p class="card-text">Price: LKR 1,250</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -39,8 +144,4 @@
         <p class="mb-0">&copy; 2025 Warm & Whisked</p>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+{% endblock %}
