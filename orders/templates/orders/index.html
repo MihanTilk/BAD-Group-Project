@@ -1,14 +1,38 @@
-{% extends 'orders/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warm & Whisked</title>
+    <!-- Include Bootstrap CSS (or any other CSS framework) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- You can add custom styles here -->
+</head>
+<body>
 
-{% block title %}Warm & Whisked{% endblock %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Warm & Whisked</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+        </ul>
+    </div>  
+</nav>
 
-{% block content %}
 <!-- Hero Section -->
 <div class="bg-dark text-white text-center py-5" style="background-image: url('https://source.unsplash.com/1600x600/?comfort-food,restaurant'); background-size: cover; background-position: center;">
     <h1 class="display-4 fw-bold">Warm & Whisked</h1>
     <p class="lead">Where every bite feels like home.</p>
     <div class="mt-4">
-        <!-- Correcting Sign Up and Login links -->
         <a href="{% url 'sign_up' %}" class="btn btn-outline-light me-2">Sign Up</a>
         <a href="{% url 'login' %}" class="btn btn-light">Login</a>
     </div>
@@ -25,7 +49,6 @@
     <div class="d-flex flex-wrap justify-content-center gap-3">
         <a href="{% url 'main_dishes' %}" class="btn btn-primary">Main Dishes</a>
         <a href="{% url 'rice_curry_comforts' %}" class="btn btn-success">Rice & Curry Comforts</a>
-        <!-- Add links to Sandwiches & Wraps and Sides & Snacks if they have URLs -->
         <a href="{% url 'sandwiches_wraps' %}" class="btn btn-warning">Sandwiches & Wraps</a>
         <a href="{% url 'sides_snacks' %}" class="btn btn-info">Sides & Snacks</a>
     </div>
@@ -44,7 +67,6 @@
                 </div>
             </div>
         </div>
-        <!-- Add more featured dishes similarly if needed -->
         <div class="col-md-4">
             <div class="card shadow">
                 <img src="https://source.unsplash.com/600x400/?burger" class="card-img-top" alt="Gourmet Burger">
@@ -81,13 +103,15 @@
         <div class="col-md-6">
             <blockquote class="blockquote text-center">
                 <p class="mb-0">“The mac & cheese was heavenly! Just like mom used to make.”</p>
-                <footer class="blockquote-footer">— Happy Customer</footer>
+                <hr class="my-3 w-50 mx-auto">
+                <footer class="blockquote-footer">Happy Customer</footer>
             </blockquote>
         </div>
         <div class="col-md-6">
             <blockquote class="blockquote text-center">
                 <p class="mb-0">“The pizza crust was perfectly crispy, just the way I like it!”</p>
-                <footer class="blockquote-footer">— Pizza Lover</footer>
+                <hr class="my-3 w-50 mx-auto">
+                <footer class="blockquote-footer">Pizza Lover</footer>
             </blockquote>
         </div>
     </div>
@@ -100,4 +124,9 @@
     <p class="mb-0">&copy; 2025 Warm & Whisked</p>
 </footer>
 
-{% endblock %}
+<!-- Include Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
