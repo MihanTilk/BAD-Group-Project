@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Warm & Whisked</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="font-family: 'Segoe UI', sans-serif; background-color: #fffdf8;">
+
+    <!-- Hero Section -->
+    <div class="bg-dark text-white text-center py-5" style="background-image: url('https://source.unsplash.com/1600x600/?comfort-food,restaurant'); background-size: cover; background-position: center;">
+        <h1 class="display-4 fw-bold">Warm & Whisked</h1>
+        <p class="lead">Where every bite feels like home.</p>
+        <div class="mt-4">
+            <!-- Correcting Sign Up and Login links -->
+            <a href="{% url 'sign_up' %}" class="btn btn-outline-light me-2">Sign Up</a>
+            <a href="{% url 'login' %}" class="btn btn-light">Login</a>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="container my-4">
+        <input type="text" class="form-control" placeholder="Search for dishes (e.g., fried rice, veg, non-spicy)">
+    </div>
+
+    <!-- Menu Categories -->
+    <div class="container text-center my-4">
+        <h3 class="mb-3">Explore Our Menu</h3>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="{% url 'main_dishes' %}" class="btn btn-primary">Main Dishes</a>
+            <button class="btn btn-success">Rice & Curry Comforts</button>
+            <button class="btn btn-warning">Sandwiches & Wraps</button>
+            <button class="btn btn-info">Sides & Snacks</button>
+        </div>
+    </div>
+
+    <!-- Featured Dishes -->
+    <div class="container my-5">
+        <h3 class="text-center mb-4">✨ Today's Specials</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <img src="https://source.unsplash.com/600x400/?chicken-pot-pie" class="card-img-top" alt="Creamy Chicken Pot Pie">
+                    <div class="card-body">
+                        <h5 class="card-title">Creamy Chicken Pot Pie</h5>
+                        <p class="card-text">Rich, creamy, and comforting – just like home. <strong>LKR 1,250</strong></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more featured dishes similarly if needed -->
+        </div>
+    </div>
+
+    <!-- Quick Order & Loyalty -->
+    <div class="container text-center my-5">
+        <a href="#" class="btn btn-danger btn-lg mb-3">🛒 Reorder Your Favorite Meal</a>
+        <div class="alert alert-secondary mt-3">
+            🌟 <strong>Join our Loyalty Program:</strong> Earn points with every order!
+        </div>
+    </div>
+
+    <!-- Customer Reviews -->
+    <div class="container my-5">
+        <h3 class="text-center mb-4">💬 What Our Customers Say</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <blockquote class="blockquote text-center">
+                    <p class="mb-0">“The mac & cheese was heavenly! Just like mom used to make.”</p>
+                    <footer class="blockquote-footer">— Happy Customer</footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer: Contact Info & Opening Hours -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p class="mb-0">📍 Contact us at: <a href="mailto:info@warmandwhisked.lk" class="text-white">info@warmandwhisked.lk</a></p>
+        <p class="mb-0">🕒 We’re open daily from <strong>9 AM to 11 PM</strong></p>
+        <p class="mb-0">&copy; 2025 Warm & Whisked</p>
+    </footer>
+
+</body>
+</html>
