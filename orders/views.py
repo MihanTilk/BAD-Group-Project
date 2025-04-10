@@ -1,28 +1,58 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import CustomUserCreationForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import LoginForm  # Assuming you have a form for login
+from django.contrib.auth import authenticate, login
+
+
 
 # This view function handles requests to the homepage of the orders app.
+# Home page view
 def index(request):
     return render(request, 'orders/index.html')
 
+# Sign-up view
 def sign_up(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()  # Save the new user
-            messages.success(request, "Account created successfully! You can now log in.")
-            return redirect('login')  # Redirect to login page after successful sign-up
+            user = form.save()  # Save the new user
+            login(request, user)  # Log the user in immediately after registration
+            messages.success(request, "Account created successfully! You are now logged in.")
+            return redirect('home')  # Redirect to home page
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = CustomUserCreationForm()
-    
+        form = CustomUserCreationForm()  # Create a blank form
+
     return render(request, 'orders/sign_up.html', {'form': form})
 
-# View for the login page
-def login(request):
-    return render(request, 'orders/login.html')
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # Get cleaned data from the form
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            # Authenticate user based on email and password
+            user = authenticate(request, username=email, password=password)
+
+            if user is not None:
+                login(request, user)  # Log the user in
+                return redirect('home')  # Redirect to the home page after successful login
+            else:
+                messages.error(request, 'Invalid credentials. Please try again.')
+
+        else:
+            messages.error(request, 'Form is not valid. Please check the inputs.')
+
+    else:
+        form = LoginForm()
+
+    return render(request, 'orders/login.html', {'form': form})
 
 def main_dishes(request):
     dishes = [
@@ -128,3 +158,63 @@ def menu_view(request):
     }
 
     return render(request, 'menu.html', {'menu': menu})
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import CartItem  # Assuming you have a CartItem model
+
+def view_cart(request):
+    # Get the cart from session or initialize an empty cart
+    cart = request.session.get('cart', {})
+
+    # Convert cart data into a list of CartItems or any other necessary representation
+    cart_items = []
+    total_cost = 0
+
+    for item_id, quantity in cart.items():
+        try:
+            item = CartItem.objects.get(id=item_id)
+            cart_items.append({'item': item, 'quantity': quantity})
+            total_cost += item.price * quantity
+        except CartItem.DoesNotExist:
+            continue  # Handle the case where the item does not exist anymore
+
+    return render(request, 'orders/view_cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
+
+from .models import CartItem
+
+def add_to_cart(request, item_id):
+    cart = request.session.get('cart', {})
+
+    try:
+        item = CartItem.objects.get(id=item_id)
+    except CartItem.DoesNotExist:
+        return HttpResponse('Item does not exist', status=404)
+
+    # Add item to the cart or update the quantity
+    if item_id in cart:
+        cart[item_id] += 1
+    else:
+        cart[item_id] = 1
+
+    request.session['cart'] = cart
+
+    return HttpResponse('Item added to cart')
+
+
+def remove_from_cart(request, item_id):
+    cart = request.session.get('cart', {})
+
+    # Remove item from the cart if it exists
+    if item_id in cart:
+        del cart[item_id]
+
+    request.session['cart'] = cart
+    return HttpResponse('Item removed from cart')
+
+def checkout(request):
+    cart = request.session.get('cart', {})
+    # Process the cart for payment, etc.
+    # After checkout, clear the cart
+    request.session['cart'] = {}
+    return render(request, 'orders/checkout.html')
