@@ -13,6 +13,7 @@ urlpatterns = [
     path('sandwiches-wraps/', views.sandwiches_wraps, name='sandwiches_wraps'),
     path('sides-snacks/', views.sides_snacks, name='sides_snacks'),
     path('menu/', views.menu, name='menu'),
-    path('about/', views.about, name='about'), 
+    path('about/', views.about, name='about'),
+    path('menu/', views.menu_view, name='menu'), 
 ]
 

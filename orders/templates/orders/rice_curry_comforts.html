@@ -2,65 +2,73 @@
 
 {% load static %}
 
+{% block title %}Rice & Curry Comforts - Warm & Whisked{% endblock %}
+
 {% block content %}
-    <div class="container mt-4">
-        <h2 class="text-center">Rice & Curry Comforts</h2>
 
-        <div class="row">
-            <!-- Creamy Chicken Curry with Rice -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{% static 'images/Creamy_Chicken_Curry_with_Rice.jpg' %}" class="card-img-top" alt="Creamy Chicken Curry with Rice">
-                    <div class="card-body">
-                        <h5 class="card-title">Creamy Chicken Curry with Rice</h5>
-                        <p class="card-text">LKR 1,200</p>
-                    </div>
+<!-- Rice & Curry Comforts Menu -->
+<div class="container my-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Creamy Chicken Curry with Rice -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Creamy_Chicken_Curry_with_Rice.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Creamy Chicken Curry with Rice">
+                <div class="card-body">
+                    <h5 class="card-title">Creamy Chicken Curry with Rice</h5>
+                    <p class="card-text">Rich and creamy curry served over fluffy white rice.</p>
+                    <p class="card-text">Price: LKR 1,200</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Sri Lankan Dhal Curry -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{% static 'images/Sri_Lankan_Dhal_Curry.jpg' %}" class="card-img-top" alt="Sri Lankan Dhal Curry">
-                    <div class="card-body">
-                        <h5 class="card-title">Sri Lankan Dhal Curry</h5>
-                        <p class="card-text">LKR 800</p>
-                    </div>
+        <!-- Sri Lankan Dhal Curry -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Sri_Lankan_Dhal_Curry.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Sri Lankan Dhal Curry">
+                <div class="card-body">
+                    <h5 class="card-title">Sri Lankan Dhal Curry</h5>
+                    <p class="card-text">Spiced lentils simmered in coconut milk and curry spices.</p>
+                    <p class="card-text">Price: LKR 800</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Coconut Milk Rice with Onion Sambal -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{% static 'images/Coconut_Milk_Rice_with_Onion_Sambal.jpg' %}" class="card-img-top" alt="Coconut Milk Rice with Onion Sambal">
-                    <div class="card-body">
-                        <h5 class="card-title">Coconut Milk Rice with Onion Sambal</h5>
-                        <p class="card-text">LKR 750</p>
-                    </div>
+        <!-- Coconut Milk Rice with Onion Sambal -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Coconut_Milk_Rice_with_Onion_Sambal.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Coconut Milk Rice with Onion Sambal">
+                <div class="card-body">
+                    <h5 class="card-title">Coconut Milk Rice with Onion Sambal</h5>
+                    <p class="card-text">Creamy coconut rice served with spicy onion sambal.</p>
+                    <p class="card-text">Price: LKR 750</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Fried Rice with Egg and Sausage -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{% static 'images/Fried_Rice_with_Egg_and_Sausage.jpg' %}" class="card-img-top" alt="Fried Rice with Egg and Sausage">
-                    <div class="card-body">
-                        <h5 class="card-title">Fried Rice with Egg and Sausage</h5>
-                        <p class="card-text">LKR 1,050</p>
-                    </div>
+        <!-- Fried Rice with Egg and Sausage -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Fried_Rice_with_Egg_and_Sausage.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Fried Rice with Egg and Sausage">
+                <div class="card-body">
+                    <h5 class="card-title">Fried Rice with Egg and Sausage</h5>
+                    <p class="card-text">Wok-fried rice with scrambled eggs and grilled sausages.</p>
+                    <p class="card-text">Price: LKR 1,050</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Kottu Roti -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{% static 'images/Kottu_Roti.jpg' %}" class="card-img-top" alt="Kottu Roti">
-                    <div class="card-body">
-                        <h5 class="card-title">Kottu Roti (chicken/beef/egg)</h5>
-                        <p class="card-text">LKR 950 - 1,200</p>
-                    </div>
+        <!-- Kottu Roti -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Kottu_Roti.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Kottu Roti">
+                <div class="card-body">
+                    <h5 class="card-title">Kottu Roti (Chicken/Beef/Egg)</h5>
+                    <p class="card-text">Sri Lanka’s favorite chopped roti stir-fry with your choice of protein.</p>
+                    <p class="card-text">Price: LKR 950 - 1,200</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 {% endblock %}

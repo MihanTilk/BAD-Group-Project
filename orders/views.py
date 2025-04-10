@@ -82,3 +82,49 @@ def menu(request):
 def about(request):
     # Logic to render the About page
     return render(request, 'orders/about.html')
+
+from django.shortcuts import render
+
+def menu_view(request):
+    # Define the menu items
+    menu = {
+        'Main Dishes': [
+            {'name': 'Mac & Cheese (classic)', 'price': 850, 'slug': 'mac_and_cheese_classic'},
+            {'name': 'Mac & Cheese (bacon/truffle/jalapeño)', 'price': 1100, 'slug': 'mac_and_cheese_bacon'},
+            {'name': 'Chicken Pot Pie', 'price': 1250, 'slug': 'chicken_pot_pie'},
+            {'name': 'Beef Stew', 'price': 1350, 'slug': 'beef_stew'},
+            {'name': 'Shepherd’s Pie', 'price': 1200, 'slug': 'shepherds_pie'},
+            {'name': 'Fried Chicken & Waffles', 'price': 1400, 'slug': 'fried_chicken_waffles'},
+            {'name': 'Meatloaf with Gravy', 'price': 1300, 'slug': 'meatloaf_with_gravy'},
+            {'name': 'Spaghetti & Meatballs', 'price': 1150, 'slug': 'spaghetti_meatballs'},
+            {'name': 'Baked Ziti', 'price': 1100, 'slug': 'baked_ziti'},
+            {'name': 'Stuffed Bell Peppers', 'price': 1000, 'slug': 'stuffed_bell_peppers'},
+            {'name': 'Lasagna (beef/veg/chicken)', 'price': 1250, 'slug': 'lasagna'},
+        ],
+        'Rice & Curry Comforts': [
+            {'name': 'Creamy Chicken Curry with Rice', 'price': 1200, 'slug': 'creamy_chicken_curry_with_rice'},
+            {'name': 'Sri Lankan Dhal Curry', 'price': 800, 'slug': 'sri_lankan_dhal_curry'},
+            {'name': 'Coconut Milk Rice with Onion Sambal', 'price': 750, 'slug': 'coconut_milk_rice_with_onion_sambal'},
+            {'name': 'Fried Rice with Egg and Sausage', 'price': 1050, 'slug': 'fried_rice_with_egg_and_sausage'},
+            {'name': 'Kottu Roti (chicken/beef/egg)', 'price': 950, 'slug': 'kottu_roti'},
+        ],
+        'Sandwiches & Wraps': [
+            {'name': 'Grilled Cheese Sandwich', 'price': 700, 'slug': 'grilled_cheese_sandwich'},
+            {'name': 'Philly Cheesesteak', 'price': 1200, 'slug': 'philly_cheesesteak'},
+            {'name': 'Club Sandwich', 'price': 1000, 'slug': 'club_sandwich'},
+            {'name': 'Pulled Pork Sandwich', 'price': 1150, 'slug': 'pulled_pork_sandwich'},
+            {'name': 'Chicken Wrap with Garlic Sauce', 'price': 950, 'slug': 'chicken_wrap_with_garlic_sauce'},
+            {'name': 'Toasted Tuna Melt', 'price': 950, 'slug': 'toasted_tuna_melt'},
+        ],
+        'Sides & Snacks': [
+            {'name': 'Mashed Potatoes with Gravy', 'price': 500, 'slug': 'mashed_potatoes_with_gravy'},
+            {'name': 'French Fries / Wedges / Curly Fries', 'price': 450, 'slug': 'french_fries'},
+            {'name': 'Onion Rings', 'price': 500, 'slug': 'onion_rings'},
+            {'name': 'Coleslaw', 'price': 350, 'slug': 'coleslaw'},
+            {'name': 'Buttered Corn', 'price': 400, 'slug': 'buttered_corn'},
+            {'name': 'Garlic Bread', 'price': 450, 'slug': 'garlic_bread'},
+            {'name': 'Loaded Nachos', 'price': 1100, 'slug': 'loaded_nachos'},
+        ]
+    }
+
+    return render(request, 'menu.html', {'menu': menu})
