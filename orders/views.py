@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import LoginForm  # Assuming you have a form for login
 from django.contrib.auth import authenticate, login
-
+from .models import MenuItem
 
 
 # This view function handles requests to the homepage of the orders app.
@@ -14,20 +14,34 @@ def index(request):
     return render(request, 'orders/index.html')
 
 # Sign-up view
+# views.py
+from django.contrib.auth import login
+
 def sign_up(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()  # Save the new user
-            login(request, user)  # Log the user in immediately after registration
-            messages.success(request, "Account created successfully! You are now logged in.")
-            return redirect('home')  # Redirect to home page
+            # Check if the user already exists
+            username = form.cleaned_data['username']
+            if User.objects.filter(username=username).exists():
+                # If the user already exists, show a message
+                messages.error(request, "This username is already taken. Please login.")
+                return redirect('login')  # Redirect to the login page
+            else:
+                # If user doesn't exist, save and log them in
+                user = form.save()
+                login(request, user)
+                messages.success(request, "Account created successfully! You are now logged in.")
+                return redirect('index')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = CustomUserCreationForm()  # Create a blank form
+        form = CustomUserCreationForm()
 
     return render(request, 'orders/sign_up.html', {'form': form})
+
+    
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -68,8 +82,8 @@ def main_dishes(request):
         {"name": "Stuffed Bell Peppers", "price": 1_000, "image": "https://source.unsplash.com/300x200/?stuffed-peppers"},
         {"name": "Lasagna (beef/veg/chicken)", "price": 1_250, "image": "https://source.unsplash.com/300x200/?lasagna"},
     ]
-    
-    return render(request, 'orders/main_dishes.html', {'dishes': dishes})
+    items = MenuItem.objects.filter(category="Main Dishes")
+    return render(request, 'orders/main_dishes.html', {'items': items})
 
 def rice_curry_comforts(request):
     rice_curry_items = [
@@ -105,9 +119,6 @@ def sides_snacks(request):
     ]
     return render(request, 'orders/sides_snacks.html', {'items': items})
 
-def menu(request):
-    # Logic to render the menu page
-    return render(request, 'orders/menu.html')
 
 def about(request):
     # Logic to render the About page
@@ -115,7 +126,7 @@ def about(request):
 
 from django.shortcuts import render
 
-def menu_view(request):
+def menu(request):
     # Define the menu items
     menu = {
         'Main Dishes': [
@@ -157,9 +168,8 @@ def menu_view(request):
         ]
     }
 
-    return render(request, 'menu.html', {'menu': menu})
+    return render(request, 'orders/menu.html', {'menu': menu})
 
-from django.shortcuts import render
 from django.http import HttpResponse
 from .models import CartItem  # Assuming you have a CartItem model
 
@@ -183,23 +193,26 @@ def view_cart(request):
 
 from .models import CartItem
 
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from .models import MenuItem
+
 def add_to_cart(request, item_id):
     cart = request.session.get('cart', {})
 
-    try:
-        item = CartItem.objects.get(id=item_id)
-    except CartItem.DoesNotExist:
-        return HttpResponse('Item does not exist', status=404)
+    # Ensure item exists
+    item = get_object_or_404(MenuItem, id=item_id)
 
-    # Add item to the cart or update the quantity
-    if item_id in cart:
-        cart[item_id] += 1
+    # Update quantity in session cart
+    item_id_str = str(item_id)  # keys must be strings for session
+    if item_id_str in cart:
+        cart[item_id_str] += 1
     else:
-        cart[item_id] = 1
+        cart[item_id_str] = 1
 
     request.session['cart'] = cart
 
-    return HttpResponse('Item added to cart')
+    return HttpResponse("Item added to cart successfully")
 
 
 def remove_from_cart(request, item_id):
@@ -218,3 +231,21 @@ def checkout(request):
     # After checkout, clear the cart
     request.session['cart'] = {}
     return render(request, 'orders/checkout.html')
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import UserRegistrationForm
+
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    date_placed = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Completed', 'Completed')])
+
+    def __str__(self):
+        return f"Order {self.id} - {self.user.username}"
