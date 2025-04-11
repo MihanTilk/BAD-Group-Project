@@ -28,17 +28,21 @@ class CustomUserCreationForm(UserCreationForm):
             raise forms.ValidationError("A user with that email already exists.")
         return email
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']  # Ensures email is saved
-        if commit:
-            user.save()
+def save(self, commit=True):
+    user = super().save(commit=False)
+    user.email = self.cleaned_data['email']  # Ensures email is saved
+    if commit:
+        user.save()
+
+        # Check if profile already exists before creating a new one
+        if not Profile.objects.filter(user=user).exists():
             Profile.objects.create(
                 user=user,
                 address=self.cleaned_data['address'],
                 phone_number=self.cleaned_data.get('mobile_number')
             )
-        return user
+    return user
+
 
 
 # Login Form
