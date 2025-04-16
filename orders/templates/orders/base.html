@@ -24,6 +24,20 @@
                 </li>
             </ul>
         </div>
+        <div class="d-flex ms-auto align-items-center">
+            {% if user.is_authenticated %}
+                <span class="navbar-text text-light me-3">
+                    Hello, {{ user.username }}!
+                </span>
+                <form action="{% url 'logout' %}" method="POST" class="mb-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
+                <a href="{% url 'sign_up' %}" class="btn btn-outline-light btn-sm">Sign Up</a>
+            {% endif %}
+        </div>        
     </nav>
 
     <!-- Main content -->

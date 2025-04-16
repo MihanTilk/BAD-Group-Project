@@ -40,33 +40,31 @@ def sign_up(request):
 
     return render(request, 'orders/sign_up.html', {'form': form})
 
-    
-
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = AuthenticationForm(data=request.POST)
+
         if form.is_valid():
-            # Get cleaned data from the form
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-
-            # Authenticate user based on email and password
-            user = authenticate(request, username=email, password=password)
-
-            if user is not None:
-                login(request, user)  # Log the user in
-                return redirect('home')  # Redirect to the home page after successful login
-            else:
-                messages.error(request, 'Invalid credentials. Please try again.')
-
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f"Welcome back, {user.username}!")
+            return redirect('index')  # change to your landing page
         else:
-            messages.error(request, 'Form is not valid. Please check the inputs.')
-
+            messages.error(request, "Invalid username or password.")
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
 
     return render(request, 'orders/login.html', {'form': form})
+
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You’ve been logged out.")
+    return redirect('index')
+
+
 
 def main_dishes(request):
     dishes = [
@@ -249,3 +247,5 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - {self.user.username}"
+
+

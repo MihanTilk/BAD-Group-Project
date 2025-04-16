@@ -2,6 +2,9 @@
 
 from django.urls import path
 from . import views  # Import your app’s views
+from django.contrib.auth.views import LogoutView
+from .views import login_view
+
 
 # Define URL patterns specific to the 'orders' app
 urlpatterns = [
@@ -13,10 +16,11 @@ urlpatterns = [
     path('menu/', views.menu, name='menu'),
     path('view_cart/', views.view_cart, name='view_cart'),
     path('sign-up/', views.sign_up, name='sign_up'),
-    path('login/', views.login_view, name='login'),
+    path('login/', login_view, name='login'),
     path('add_to_cart/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
     path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('checkout/', views.checkout, name='checkout'), 
     path('add_to_cart/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
+    path('logout/', LogoutView.as_view(next_page='index'), name='logout'),
 ]
 
