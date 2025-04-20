@@ -1,0 +1,148 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2 class="mb-4">Frequently Asked Questions</h2>
+
+            <div class="accordion mb-5" id="faqAccordion">
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            How to create an account?
+                        </button>
+                    </h3>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>To create an account, click on the "Sign Up" button at the top right corner of the page. Fill in the required information including your email address, username, and password. Once submitted, you'll be able to log in and start placing orders.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            How can I cancel my order?
+                        </button>
+                    </h3>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>You can cancel your order within 5 minutes of placing it by going to your Order History page. After this time, please call our customer service at (+94) 772828288 to request cancellation. Note that orders already being prepared cannot be cancelled.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                            How do I make a purchase?
+                        </button>
+                    </h3>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Browse our menu and add items to your cart</li>
+                                <li>Review your cart and click "Proceed to Checkout"</li>
+                                <li>Enter your delivery address and contact information</li>
+                                <li>You'll receive an order confirmation via email</li>
+                                <li>Pay at the cashier and complete your order</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                            How do I pay?
+                        </button>
+                    </h3>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>We accept the following payment methods at the cashier:</p>
+                            <ul>
+                                <li>Cash on delivery</li>
+                                <li>Credit/Debit cards (Visa, MasterCard)</li>
+                                <li>Online banking transfers</li>
+                                <li>Mobile payment apps (Visa, MasterCard)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                            How to reset password?
+                        </button>
+                    </h3>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>To reset your password:</p>
+                            <ol>
+                                <li>Click on "Login" at the top right</li>
+                                <li>Click on "Forgot password?" link</li>
+                                <li>Enter your registered email address</li>
+                                <li>Check your email for password reset instructions</li>
+                                <li>Follow the link to create a new password</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="headingSix">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                            Item I received doesn't match order
+                        </button>
+                    </h3>
+                    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>We apologize for any inconvenience. Please contact us immediately at (+94) 772828288 or email info@warmandwhisked.lk with your order number and details of the incorrect item. We'll arrange for a replacement or refund as appropriate.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Get in touch</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Address</h6>
+                    <p class="mb-4">University of Moratuwa,<br>Bandaranayake Mawatha,<br>Moratuwa 10400</p>
+
+                    <h6 class="mb-3"><i class="fas fa-phone me-2"></i>Contact No</h6>
+                    <p class="mb-4">(+94) 772828288</p>
+
+                    <h6 class="mb-3"><i class="fas fa-envelope me-2"></i>Email</h6>
+                    <p class="mb-4">info@warmandwhisked.lk</p>
+
+                    <div class="d-grid">
+                        <a href="{% url 'contact' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Send us a message
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .accordion-button:not(.collapsed) {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(0,0,0,.125);
+    }
+</style>
+{% endblock %}

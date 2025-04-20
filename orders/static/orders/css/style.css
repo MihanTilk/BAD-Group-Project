@@ -1,0 +1,213 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.navbar-brand img {
+    max-height: 50px;
+}
+
+.nav-link {
+    color: #212529;
+    transition: color 0.3s ease;
+}
+
+.nav-link.active, .nav-link:hover {
+    color: #0d6efd;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+/* Cards */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.card-header {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Footer */
+.footer {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.footer a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer .social-icons a {
+    color: #6c757d;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.footer .social-icons a:hover {
+    color: #0d6efd;
+}
+
+/* Accordion */
+.accordion-button:not(.collapsed) {
+    background-color: #e9ecef;
+    color: #0d6efd;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+/* Shopping Cart Table */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.input-group .form-control {
+    text-align: center;
+}
+
+/* Similar Items */
+.menu-card img {
+    border-radius: 8px 8px 0 0;
+}
+
+.menu-card .card-title {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Forms */
+form input, form textarea {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+form input:focus, form textarea:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Navbar Overlay - Make it always fixed */
+.navbar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+}
+
+/* Hero Container - Only for home page */
+.home-page .hero-container {
+    position: relative;
+    width: auto;
+    height: 100vh; /* Full viewport height */
+    margin-top: -60px; /* Pull up to overlap navbar */
+    padding-top: 60px; /* Compensate for fixed navbar */
+}
+
+.home-page .hero-img {
+    width: auto;
+    height: auto;
+}
+
+.hero-container {
+    margin-bottom: 0; /* Remove any bottom margin */
+}
+section.py-5 {
+    padding-top: 0 !important; /* Remove top padding from first section */
+}
+
+/* For all other pages */
+.main-content {
+    padding-top: 80px; /* Space for fixed navbar */
+}
+
+/* Reset body margin */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Fixed Navbar Overlay */
+.navbar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it stays above hero image */
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    transition: all 0.3s ease;
+}
+
+/* Navbar link styling */
+.nav-link {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background-color: #0d6efd;
+    color: white !important;
+}
+
+/* Compact footer */
+.footer {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+.toast {
+    min-width: 250px;
+    z-index: 9999;
+}

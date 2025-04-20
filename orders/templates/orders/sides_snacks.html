@@ -1,0 +1,98 @@
+{% extends 'orders/base.html' %}
+
+{% load static %}
+
+{% block title %}Sides & Snacks - Warm & Whisked{% endblock %}
+
+{% block content %}
+
+<!-- Sides & Snacks Menu -->
+<div class="container my-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- Mashed Potatoes with Gravy -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Mashed_Potatoes_with_Gravy.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Mashed Potatoes with Gravy">
+                <div class="card-body">
+                    <h5 class="card-title">Mashed Potatoes with Gravy</h5>
+                    <p class="card-text">Creamy mashed potatoes smothered in savory gravy.</p>
+                    <p class="card-text">Price: LKR 500</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- French Fries / Wedges / Curly Fries -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/French_Fries.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="French Fries">
+                <div class="card-body">
+                    <h5 class="card-title">French Fries / Wedges / Curly Fries</h5>
+                    <p class="card-text">Your choice of crispy fries, potato wedges, or curly fries.</p>
+                    <p class="card-text">Price: LKR 450</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onion Rings -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Onion_Rings.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Onion Rings">
+                <div class="card-body">
+                    <h5 class="card-title">Onion Rings</h5>
+                    <p class="card-text">Golden-fried onion rings with a crunchy coating.</p>
+                    <p class="card-text">Price: LKR 500</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coleslaw -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Coleslaw.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Coleslaw">
+                <div class="card-body">
+                    <h5 class="card-title">Coleslaw</h5>
+                    <p class="card-text">Cool, creamy cabbage slaw with a tangy twist.</p>
+                    <p class="card-text">Price: LKR 350</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttered Corn -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Buttered_Corn.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Buttered Corn">
+                <div class="card-body">
+                    <h5 class="card-title">Buttered Corn</h5>
+                    <p class="card-text">Steamed sweet corn kernels tossed in butter.</p>
+                    <p class="card-text">Price: LKR 400</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Garlic Bread -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Garlic_Bread.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Garlic Bread">
+                <div class="card-body">
+                    <h5 class="card-title">Garlic Bread</h5>
+                    <p class="card-text">Toasted baguette slices with buttery garlic spread.</p>
+                    <p class="card-text">Price: LKR 450</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loaded Nachos -->
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Loaded_Nachos.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Loaded Nachos">
+                <div class="card-body">
+                    <h5 class="card-title">Loaded Nachos</h5>
+                    <p class="card-text">Crunchy nachos topped with cheese, salsa, and more.</p>
+                    <p class="card-text">Price: LKR 1,100</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

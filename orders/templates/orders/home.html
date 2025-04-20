@@ -1,0 +1,147 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block hero_section %}
+<div class="hero-container">
+    <img src="{% static 'images/hero.jpg' %}" alt="Hero Image" class="hero-img">
+</div>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Today's Specials -->
+<div class="container my-5">
+    <h3 class="text-center mb-4">Today's Specials</h3>
+    <div class="row justify-content-center">
+        <!-- Chicken Pot Pie -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Creamy_Chicken_Pot_Pie.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Creamy Chicken Pot Pie">
+                <div class="card-body">
+                    <h5 class="card-title">Creamy Chicken Pot Pie</h5>
+                    <p class="card-text">Rich, creamy, and comforting – just like home. <strong>LKR 1,250</strong></p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <form action="{% url 'add_to_cart' item_id=1 %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="from_menu" value="true">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gourmet Burger -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Gourmet_Burger.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Gourmet Burger">
+                <div class="card-body">
+                    <h5 class="card-title">Gourmet Burger</h5>
+                    <p class="card-text">Juicy, tender, and packed with flavor. <strong>LKR 1,500</strong></p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <form action="{% url 'add_to_cart' item_id=2 %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="from_menu" value="true">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pasta Carbonara -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/Pasta_Carbonara.jpg' %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Pasta Carbonara">
+                <div class="card-body">
+                    <h5 class="card-title">Pasta Carbonara</h5>
+                    <p class="card-text">A creamy, cheesy classic. <strong>LKR 1,100</strong></p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <form action="{% url 'add_to_cart' item_id=3 %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="from_menu" value="true">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="order-now py-5 bg-light">
+    <div class="container text-center">
+        <a href="{% url 'orders' %}" class="btn btn-primary btn-lg px-4">Go to Menu</a>
+    </div>
+</section>
+
+<!-- Customer Reviews -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Customer Reviews</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-quote-left fa-2x text-muted"></i>
+                        </div>
+                        <p class="card-text">"The food was absolutely delicious! Will definitely order again."</p>
+                        <p class="text-muted">- John D.</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-quote-left fa-2x text-muted"></i>
+                        </div>
+                        <p class="card-text">"Fast delivery and the packaging was excellent. Food arrived hot and fresh."</p>
+                        <p class="text-muted">- Sarah M.</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-quote-left fa-2x text-muted"></i>
+                        </div>
+                        <p class="card-text">"Great variety of options. The portions are generous and prices reasonable."</p>
+                        <p class="text-muted">- David L.</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warm & Whisked - {% block title %}{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'orders/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Fixed Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-overlay">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'orders' %}active{% endif %}" href="{% url 'orders' %}">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'cart' %}active{% endif %}" href="{% url 'cart' %}">View Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'help' %}active{% endif %}" href="{% url 'help' %}">Help</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{% url 'cart' %}" class="btn btn-outline-primary position-relative me-3">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-counter" style="display: {% if request.user.cart.cart_item_set.count > 0 %}block{% else %}none{% endif %};">
+                            {{ request.user.cart.cartitem_set.count }}
+                        </span>
+                    </a>
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'order_tracking' %}"><i class="fas fa-clipboard-list me-2"></i>My Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
+                        <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block hero_section %}{% endblock %}
+
+    <!-- Main Content -->
+    <main class="container main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+<hr class="my-4">
+
+    <!-- Footer -->
+<footer class="footer bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Legal moved left -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0 order-1">
+                <h5 class="mb-3">Legal</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none">Terms of Service</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none">Refund Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Sitemap center -->
+            <div class="col-lg-2 col-md-6 mb-4 mb-md-0 order-2">
+                <h5 class="mb-3">Sitemap</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="mb-2"><a href="{% url 'orders' %}" class="text-decoration-none">Menu</a></li>
+                    <li class="mb-2"><a href="{% url 'cart' %}" class="text-decoration-none">View Cart</a></li>
+                    <li class="mb-2"><a href="{% url 'help' %}" class="text-decoration-none">Help</a></li>
+                </ul>
+            </div>
+
+            <!-- Brand info center -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0 order-3">
+                <img src="{% static 'images/logo.png' %}" alt="Warm & Whisked" height="50" class="mb-3">
+                <p class="text-muted">
+                    <i class="fas fa-phone me-2"></i> (+94) 772828288<br>
+                    <i class="fas fa-envelope me-2"></i> info@warmandwhisked.lk
+                </p>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61574591783072" class="text-decoration-none me-3" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/warmandwhiskedbakerymd/" class="text-decoration-none me-3" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Us pushed to right -->
+            <div class="col-lg-4 col-md-6 order-lg-4 order-4">
+                <h5 class="mb-3">Contact Us</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="full_name" placeholder="Full Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" name="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <textarea class="form-control h-100" name="message" placeholder="Your Message" required></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Send</button>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="text-center">
+            <p class="text-muted mb-0">&copy; 2025 Warm & Whisked. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+
+<div id="cart-toast" class="toast align-items-center text-white bg-success position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" style="display: none;">
+  <div class="d-flex">
+    <div class="toast-body" id="toast-message"></div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap toast
+    const toast = new bootstrap.Toast(document.getElementById('cart-toast'));
+
+    // Update cart counter in navbar
+    function updateCartCounter(count) {
+        const counter = document.querySelector('.cart-counter');
+        if (counter) {
+            counter.textContent = count;
+            counter.style.display = count > 0 ? 'block' : 'none';
+        }
+    }
+
+    // Handle all add-to-cart forms
+    document.querySelectorAll('form[action^="/cart/add/"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show toast message
+                    document.getElementById('toast-message').textContent = data.message;
+                    const toastEl = document.getElementById('cart-toast');
+                    toastEl.style.display = 'block';
+                    toast.show();
+
+                    // Update cart counter
+                    updateCartCounter(data.cart_count);
+
+                    // Hide toast after 3 seconds
+                    setTimeout(() => {
+                        toast.hide();
+                    }, 3000);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
+
+</body>
+</html>
