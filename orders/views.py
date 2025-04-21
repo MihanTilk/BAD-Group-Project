@@ -30,9 +30,21 @@ def menu(request):
 
 @login_required
 def cart(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    items = cart.items.all()
-    return render(request, 'orders/cart.html', {'cart_items': items})
+    # Try to get the cart for the logged-in user
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        # If no cart exists for the user, create a new empty cart (optional)
+        cart = None  # or you can create an empty Cart instance if you prefer
+    
+    # Check if the cart is empty (i.e., no items in the cart)
+    cart_is_empty = not cart or cart.items.count() == 0
+
+    # Pass the cart or empty cart status to the template
+    return render(request, 'orders/cart.html', {
+        'cart': cart,
+        'cart_is_empty': cart_is_empty
+    })
 
 
 @login_required
