@@ -40,6 +40,10 @@
                             <h5 class="card-title">{{ item.name }}</h5>
                             <p class="card-text">{{ item.description }}</p>
                             <p class="card-text"><strong>LKR {{ item.price }}</strong></p>
+                            <form action="{% url 'add_to_cart' item_id=item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
                         </div>
                         <div class="card-footer bg-white border-0">
                             <form action="{% url 'add_to_cart' item_id=item.id %}" method="post">
