@@ -230,11 +230,19 @@ class MenuView(View):
 class DisplayMenuView(View):
     def get(self, request):
         categories = [
-            ('main-dishes', 'Main Dishes'),
-            ('rice-curry-comforts', 'Rice & Curry'),
-            ('sandwiches-wraps', 'Sandwiches & Wraps'),
-            ('sides-snacks', 'Sides & Snacks')
+            ('MAIN', 'Main Dishes'),
+            ('RICE', 'Rice & Curry'),
+            ('SAND', 'Sandwiches & Wraps'),
+            ('SIDE', 'Sides & Snacks')
         ]
-        return render(request, 'orders/menu.html', {
-            'categories': categories,
-        })
+        # Organize menu items by category
+        menu_items_by_category = []
+        for value, name in categories:
+            items = MenuItem.objects.filter(category=value, available=True).order_by('name')
+            menu_items_by_category.append((value, name, items))
+
+        context = {
+            'categories': [(value, name) for value, name in categories],  # For the category cards
+            'menu_items_by_category': menu_items_by_category  # For the menu sections
+        }
+        return render(request, 'orders/menu.html', context)
