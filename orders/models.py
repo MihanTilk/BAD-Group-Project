@@ -101,7 +101,7 @@ class OrderItem(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.TextField(blank=True)
-    mobile_number = models.CharField(max_length=20, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
     currency = models.CharField(max_length=3, default='LKR')
 
     def __str__(self):
