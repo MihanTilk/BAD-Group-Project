@@ -164,17 +164,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Bootstrap toast
     const toast = new bootstrap.Toast(document.getElementById('cart-toast'));
-
-    // Update cart counter in navbar
-    function updateCartCounter(count) {
-        const counter = document.querySelector('.cart-counter');
-        if (counter) {
-            counter.textContent = count;
-            counter.style.display = count > 0 ? 'block' : 'none';
-        }
-    }
 
     // Handle all add-to-cart forms
     document.querySelectorAll('form[action^="/cart/add/"]').forEach(form => {
@@ -186,11 +176,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                }
+                    'X-Requested-With': 'XMLHttpRequest',  // Tell Django this is an AJAX request
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                },
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parse response as JSON
+            })
             .then(data => {
                 if (data.success) {
                     // Show toast message
@@ -200,15 +195,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     toast.show();
 
                     // Update cart counter
-                    updateCartCounter(data.cart_count);
-
-                    // Hide toast after 3 seconds
-                    setTimeout(() => {
-                        toast.hide();
-                    }, 3000);
+                    const counter = document.querySelector('.cart-counter');
+                    if (counter) {
+                        counter.textContent = data.cart_count;
+                        counter.style.display = data.cart_count > 0 ? 'block' : 'none';
+                    }
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                // Optionally show an error message
+                document.getElementById('toast-message').textContent = 'Failed to add item to cart.';
+                document.getElementById('cart-toast').style.display = 'block';
+                toast.show();
+            });
         });
     });
 });

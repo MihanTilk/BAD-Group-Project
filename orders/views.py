@@ -30,68 +30,64 @@ def menu(request):
 
 @login_required
 def cart(request):
-    # Try to get the cart for the logged-in user
     try:
         cart = Cart.objects.get(user=request.user)
+        cart_items = cart.items.all()  # Get all items in the cart
+        total = sum(item.total_price for item in cart_items)
     except Cart.DoesNotExist:
-        # If no cart exists for the user, create a new empty cart (optional)
-        cart = None  # or you can create an empty Cart instance if you prefer
-    
-    # Check if the cart is empty (i.e., no items in the cart)
-    cart_is_empty = not cart or cart.items.count() == 0
+        cart_items = None
+        total = 0
 
-    # Pass the cart or empty cart status to the template
     return render(request, 'orders/cart.html', {
-        'cart': cart,
-        'cart_is_empty': cart_is_empty
+        'cart_items': cart_items,  # Pass items to template
+        'total_cost': total,       # Pass total cost
     })
 
 
 @login_required
 def add_to_cart(request, item_id):
-    menu_item = get_object_or_404(MenuItem, id=item_id)
-
-    # Get or create cart for user
-    cart, created = Cart.objects.get_or_create(user=request.user)
-
-    # Get or create cart item
-    cart_item, created = CartItem.objects.get_or_create(
-        cart=cart,
-        item=menu_item,
-        defaults={'quantity': 1}
-    )
-
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-
-    messages.success(request, f"{menu_item.name} added to cart!")
-    return redirect('menu')
-
-@login_required
-def update_cart(request, item_id):
-    menu_item = get_object_or_404(MenuItem, id=item_id)
-    cart = get_object_or_404(Cart, user=request.user)
-
     if request.method == 'POST':
-        action = request.POST.get('action')
+        menu_item = get_object_or_404(MenuItem, id=item_id)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
-            menu_item=menu_item
+            menu_item=menu_item,
+            defaults={'quantity': 1}
         )
 
-        if action == 'add':
+        if not created:
             cart_item.quantity += 1
-        elif action == 'remove':
-            if cart_item.quantity > 1:
-                cart_item.quantity -= 1
-            else:
-                cart_item.delete()
-                return redirect('cart')
-        cart_item.save()
+            cart_item.save()
 
-    return redirect('orders' if request.GET.get('from_menu') else 'cart')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            # Return JSON for AJAX requests
+            return JsonResponse({
+                'success': True,
+                'message': f"{menu_item.name} added to cart!",
+                'cart_count': cart.items.count(),
+            })
+        else:
+            # Redirect for normal form submissions
+            messages.success(request, f"{menu_item.name} added to cart!")
+            return redirect('orders')
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
 
+
+@login_required
+def update_cart(request, cart_item_id):  # Changed parameter name
+    cart_item = get_object_or_404(CartItem, id=cart_item_id, cart__user=request.user)
+
+    if request.method == 'POST':
+        new_quantity = int(request.POST.get('quantity', 1))
+
+        if new_quantity < 1:
+            cart_item.delete()
+        else:
+            cart_item.quantity = new_quantity
+            cart_item.save()
+
+    return redirect('cart')
 
 @login_required
 def remove_from_cart(request, item_id):

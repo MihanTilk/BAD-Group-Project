@@ -23,7 +23,7 @@
                         <tbody>
                             {% for item in cart_items %}
                             <tr>
-                                <td>{{ item.item.name }}</td>
+                                <td>{{ item.menu_item.name }}</td>
                                 <td>
                                     <form action="{% url 'update_cart' item.id %}" method="post" class="quantity-form">
                                         {% csrf_token %}
@@ -35,7 +35,7 @@
                                         </div>
                                     </form>
                                 </td>
-                                <td>LKR {{ item.item.price }}</td>
+                                <td>LKR {{ item.menu_item.price }}</td>
                                 <td>LKR {{ item.total_price }}</td>
                                 <td>
                                     <form action="{% url 'remove_from_cart' item.id %}" method="post">
@@ -56,7 +56,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <h5>Subtotal:</h5>
-                        <h5>LKR {{ total }}</h5>
+                        <h5>LKR {{ total_cost }}</h5>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                         <a href="{% url 'checkout' %}" class="btn btn-primary">
@@ -68,6 +68,7 @@
         </div>
     </div>
 
+    <!-- Similar items -->
     <div class="row">
         <div class="col">
             <h3 class="mb-4">Explore similar food</h3>
