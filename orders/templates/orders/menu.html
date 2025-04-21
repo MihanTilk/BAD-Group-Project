@@ -7,8 +7,28 @@
 {% block content %}
     <h1 class="text-center my-4">Our Menu</h1>
 
+<!-- Menu Categories -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            {% for value, name in categories %}
+            <div class="col-md-3 mb-4">
+                <a href="#{{ value|slugify }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-effect">
+                        <div class="card-body text-center">
+                            <i class="fas fa-utensils fa-3x mb-3 text-primary"></i>
+                            <h3 class="h5">{{ name }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
     <!-- Main Dishes -->
-    <h2 class="text-center">Main Dishes</h2>
+    <h2 class="text-center"  id="main-dishes">Main Dishes</h2>
     <div class="container my-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <!-- Mac & Cheese (Classic) -->
@@ -145,8 +165,8 @@
         </div>
     </div>
 
-    <!-- Rice & Curry Comforts -->
-    <h2 class="text-center">Rice & Curry Comforts</h2>
+    <!-- Rice & Curry-->
+    <h2 class="text-center" id="rice-curry-comforts">Rice & Curry</h2>
     <div class="container my-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <!-- Creamy Chicken Curry with Rice -->
@@ -212,7 +232,7 @@
     </div>
 
     <!-- Sandwiches & Wraps -->
-<h2 class="text-center">Sandwiches & Wraps</h2>
+<h2 class="text-center" id="sandwiches-wraps">Sandwiches & Wraps</h2>
 <div class="container my-5">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <!-- Grilled Cheese Sandwich -->
@@ -290,7 +310,7 @@
 </div>
 
 <!-- Sides & Snacks -->
-<h2 class="text-center">Sides & Snacks</h2>
+<h2 class="text-center" id="sides-snacks">Sides & Snacks</h2>
 <div class="container my-5">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <!-- French Fries -->
