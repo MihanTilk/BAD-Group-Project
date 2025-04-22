@@ -20,10 +20,12 @@ urlpatterns = [
     path('profile/delete/', views.delete_account, name='delete_account'),
     path('contact/', views.contact, name='contact'),
     path('help/', views.help, name='help'),
-    path('accounts/login/', auth_views.LoginView.as_view(template_name='orders/login.html'), name='login'),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='orders/pages/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
     path('refund-policy/', views.refund_policy, name='refund_policy'),
+    path('order/complete/<int:order_id>/', views.complete_order, name='complete_order'),
+    path('order/details/<int:order_id>/', views.order_details, name='order_details'),
 ]

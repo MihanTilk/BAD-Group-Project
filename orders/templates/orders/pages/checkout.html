@@ -1,4 +1,4 @@
-{% extends 'orders/base.html' %}
+{% extends 'orders/pages/base.html' %}
 
 {% block title %}Checkout{% endblock %}
 
@@ -9,7 +9,7 @@
         Your food is on its way. Kindly have the payment ready for our delivery rider.<br>
         <strong>Total: LKR {{ total_cost }}</strong>
     </p>
-    <p class="mt-4">Thanks for choosing us — we’ll see you soon! 🍽️</p>
+    <p class="mt-4">Thanks for choosing us — we’ll see you soon!!️</p>
     <a href="{% url 'orders' %}" class="btn btn-outline-primary mt-3">Back to Menu</a>
 </div>
 {% endblock %}

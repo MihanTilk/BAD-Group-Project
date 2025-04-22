@@ -12,7 +12,7 @@ from .forms import ProfileEditForm
 def home(request):
     specials = MenuItem.objects.filter(is_special=True)[:4]
     categories = MenuItem.CATEGORY_CHOICES
-    return render(request, 'orders/home.html', {
+    return render(request, 'orders/pages/home.html', {
         'specials': specials,
         'categories': categories
     })
@@ -21,7 +21,7 @@ def home(request):
 def menu(request):
     category = request.GET.get('category', 'MAIN')
     menu_items = MenuItem.objects.filter(category=category, available=True)
-    return render(request, 'orders/menu.html', {
+    return render(request, 'orders/pages/menu.html', {
         'menu_items': menu_items,
         'categories': MenuItem.CATEGORY_CHOICES,
         'current_category': category
@@ -38,7 +38,7 @@ def cart(request):
         cart_items = None
         total = 0
 
-    return render(request, 'orders/cart.html', {
+    return render(request, 'orders/pages/cart.html', {
         'cart_items': cart_items,  # Pass items to template
         'total_cost': total,       # Pass total cost
     })
@@ -133,7 +133,7 @@ def checkout(request):
         # Clear the cart after checkout
         cart.items.all().delete()
 
-        return render(request, 'orders/checkout.html', {
+        return render(request, 'orders/pages/checkout.html', {
             'total_cost': total_cost,
         })
 
@@ -144,13 +144,13 @@ def checkout(request):
 @login_required
 def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    return render(request, 'orders/order_success.html', {'order': order})
+    return render(request, 'orders/my_orders/order_success.html', {'order': order})
 
 
 @login_required
 def order_tracking(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'orders/order_tracking.html', {'orders': orders})
+    return render(request, 'orders/my_orders/order_tracking.html', {'orders': orders})
 
 def contact(request):
     if request.method == 'POST':
@@ -188,7 +188,7 @@ def profile(request):
             return redirect('profile')
     else:
         form = UserProfileForm(instance=profile)
-    return render(request, 'orders/profile.html', {'form': form})
+    return render(request, 'orders/pages/profile.html', {'form': form})
 
 
 @login_required
@@ -202,7 +202,7 @@ def profile_edit(request):
     else:
         form = ProfileEditForm(instance=request.user)
 
-    return render(request, 'orders/profile.html', {'form': form})
+    return render(request, 'orders/pages/profile.html', {'form': form})
 
 
 @login_required
@@ -214,7 +214,7 @@ def delete_account(request):
     return redirect('profile')
 
 def help(request):
-    return render(request, 'orders/help.html')
+    return render(request, 'orders/pages/help.html')
 
 
 def signup(request):
@@ -228,7 +228,7 @@ def signup(request):
         form = CustomUserCreationForm()
 
     # If form is invalid, it will show errors automatically in template
-    return render(request, 'orders/signup.html', {'form': form})
+    return render(request, 'orders/pages/signup.html', {'form': form})
 
 class MenuView(View):
     def get(self, request):
@@ -238,7 +238,7 @@ class MenuView(View):
             ('sandwiches-wraps', 'Sandwiches & Wraps'),
             ('sides-snacks', 'Sides & Snacks')
         ]
-        return render(request, 'orders/menu.html', {'categories': categories})
+        return render(request, 'orders/pages/menu.html', {'categories': categories})
 
 class DisplayMenuView(View):
     def get(self, request):
@@ -258,13 +258,26 @@ class DisplayMenuView(View):
             'categories': [(value, name) for value, name in categories],  # For the category cards
             'menu_items_by_category': menu_items_by_category  # For the menu sections
         }
-        return render(request, 'orders/menu.html', context)
+        return render(request, 'orders/pages/menu.html', context)
 
 def privacy_policy(request):
-    return render(request, 'orders/privacy_policy.html')
+    return render(request, 'orders/legal/privacy_policy.html')
 
 def terms_of_service(request):
-    return render(request, 'orders/terms_of_service.html')
+    return render(request, 'orders/legal/terms_of_service.html')
 
 def refund_policy(request):
-    return render(request, 'orders/refund_policy.html')
+    return render(request, 'orders/legal/refund_policy.html')
+
+@login_required
+def complete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if order.status != 'completed':
+        order.status = 'completed'
+        order.save()
+    return redirect('order_tracking')
+
+@login_required
+def order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'orders/order_details.html', {'order': order})
