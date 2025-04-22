@@ -75,11 +75,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
+# Set timezone to Sri Lanka
+TIME_ZONE = 'Asia/Colombo'
+USE_TZ = True  # Store datetimes in UTC, convert to Asia/Colombo when displayed
+USE_I18N = True  # Internationalization
+USE_L10N = True  # Localized formatting
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

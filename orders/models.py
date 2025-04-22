@@ -66,7 +66,7 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     ORDER_STATUS = (
-        ('preparing', 'Being prepared'),
+        ('preparing', 'In Progress'),
         ('ready', 'Ready'),
         ('completed', 'Completed'),
     )

@@ -12,7 +12,7 @@ from .forms import ProfileEditForm
 def home(request):
     specials = MenuItem.objects.filter(is_special=True)[:4]
     categories = MenuItem.CATEGORY_CHOICES
-    return render(request, 'orders/home.html', {
+    return render(request, 'orders/pages/home.html', {
         'specials': specials,
         'categories': categories
     })
@@ -21,7 +21,7 @@ def home(request):
 def menu(request):
     category = request.GET.get('category', 'MAIN')
     menu_items = MenuItem.objects.filter(category=category, available=True)
-    return render(request, 'orders/menu.html', {
+    return render(request, 'orders/pages/menu.html', {
         'menu_items': menu_items,
         'categories': MenuItem.CATEGORY_CHOICES,
         'current_category': category
@@ -32,17 +32,19 @@ def menu(request):
 def cart(request):
     try:
         cart = Cart.objects.get(user=request.user)
-        cart_items = cart.items.all()  # Get all items in the cart
+        cart_items = cart.items.all()
         total = sum(item.total_price for item in cart_items)
+        # Store cart count in session
+        request.session['cart_count'] = cart.items.count()
     except Cart.DoesNotExist:
         cart_items = None
         total = 0
+        request.session['cart_count'] = 0
 
-    return render(request, 'orders/cart.html', {
-        'cart_items': cart_items,  # Pass items to template
-        'total_cost': total,       # Pass total cost
+    return render(request, 'orders/pages/cart.html', {
+        'cart_items': cart_items,
+        'total_cost': total,
     })
-
 
 @login_required
 def add_to_cart(request, item_id):
@@ -61,11 +63,12 @@ def add_to_cart(request, item_id):
             cart_item.save()
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            # Return JSON for AJAX requests
+            cart_count = cart.items.count()
+            request.session['cart_count'] = cart_count  # Store in session
             return JsonResponse({
                 'success': True,
                 'message': f"{menu_item.name} added to cart!",
-                'cart_count': cart.items.count(),
+                'cart_count': cart_count,
             })
         else:
             # Redirect for normal form submissions
@@ -110,28 +113,55 @@ def checkout(request):
         cart_items = cart.items.all()
         total_cost = sum(item.total_price for item in cart_items)
 
-        # Clear the cart after checkout
-        cart.items.all().delete()
+        # Get cart count before clearing
+        cart_count = cart.items.count()
+
+        # Create the order only if there are items in the cart
+        if cart_items.exists():
+            profile = request.user.profile
+            order = Order.objects.create(
+                user=request.user,
+                total=total_cost,
+                delivery_address=profile.address,
+                contact_number=profile.mobile_number,
+                status='preparing'
+            )
+
+            # Create order items
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    menu_item=cart_item.menu_item,
+                    quantity=cart_item.quantity,
+                    price=cart_item.menu_item.price
+                )
+
+            # Clear the cart after successful order creation
+            cart.items.all().delete()
+
+            # Set session cart count to 0
+            request.session['cart_count'] = 0
+
+            # Redirect to success page with order ID
+            return redirect('order_success', order_id=order.id)
+        else:
+            messages.error(request, "Your cart is empty")
+            return redirect('cart')
 
     except Cart.DoesNotExist:
-        total_cost = 0
-
-    return render(request, 'orders/checkout.html', {
-        'total_cost': total_cost,
-    })
-
+        messages.error(request, "Your cart is empty")
+        return redirect('cart')
 
 @login_required
 def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    return render(request, 'orders/order_success.html', {'order': order})
+    return render(request, 'orders/my_orders/order_success.html', {'order': order})
 
 
 @login_required
 def order_tracking(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'orders/order_tracking.html', {'orders': orders})
-
+    return render(request, 'orders/my_orders/order_tracking.html', {'orders': orders})
 
 def contact(request):
     if request.method == 'POST':
@@ -169,7 +199,7 @@ def profile(request):
             return redirect('profile')
     else:
         form = UserProfileForm(instance=profile)
-    return render(request, 'orders/profile.html', {'form': form})
+    return render(request, 'orders/pages/profile.html', {'form': form})
 
 
 @login_required
@@ -183,7 +213,7 @@ def profile_edit(request):
     else:
         form = ProfileEditForm(instance=request.user)
 
-    return render(request, 'orders/profile_edit.html', {'form': form})
+    return render(request, 'orders/pages/profile.html', {'form': form})
 
 
 @login_required
@@ -195,7 +225,7 @@ def delete_account(request):
     return redirect('profile')
 
 def help(request):
-    return render(request, 'orders/help.html')
+    return render(request, 'orders/pages/help.html')
 
 
 def signup(request):
@@ -209,7 +239,7 @@ def signup(request):
         form = CustomUserCreationForm()
 
     # If form is invalid, it will show errors automatically in template
-    return render(request, 'orders/signup.html', {'form': form})
+    return render(request, 'orders/pages/signup.html', {'form': form})
 
 class MenuView(View):
     def get(self, request):
@@ -219,7 +249,7 @@ class MenuView(View):
             ('sandwiches-wraps', 'Sandwiches & Wraps'),
             ('sides-snacks', 'Sides & Snacks')
         ]
-        return render(request, 'orders/menu.html', {'categories': categories})
+        return render(request, 'orders/pages/menu.html', {'categories': categories})
 
 class DisplayMenuView(View):
     def get(self, request):
@@ -239,4 +269,26 @@ class DisplayMenuView(View):
             'categories': [(value, name) for value, name in categories],  # For the category cards
             'menu_items_by_category': menu_items_by_category  # For the menu sections
         }
-        return render(request, 'orders/menu.html', context)
+        return render(request, 'orders/pages/menu.html', context)
+
+def privacy_policy(request):
+    return render(request, 'orders/legal/privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'orders/legal/terms_of_service.html')
+
+def refund_policy(request):
+    return render(request, 'orders/legal/refund_policy.html')
+
+@login_required
+def complete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if order.status != 'completed':
+        order.status = 'completed'
+        order.save()
+    return redirect('order_tracking')
+
+@login_required
+def order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'orders/order_details.html', {'order': order})

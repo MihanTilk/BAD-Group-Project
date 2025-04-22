@@ -1,0 +1,20 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Order #{{ order.id }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <h6>Items:</h6>
+            <ul>
+                {% for item in order.items.all %}
+                <li>{{ item.quantity }} × {{ item.menu_item.name }} - LKR {{ item.total_price }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Total: LKR {{ order.total }}</strong></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
