@@ -110,16 +110,36 @@ def checkout(request):
         cart_items = cart.items.all()
         total_cost = sum(item.total_price for item in cart_items)
 
+        # Create the order only if there are items in the cart
+        if cart_items.exists():
+            profile = request.user.profile
+            order = Order.objects.create(
+                user=request.user,
+                total=total_cost,
+                delivery_address=profile.address,
+                contact_number=profile.mobile_number,
+                status='preparing'
+            )
+
+            # Create order items
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    menu_item=cart_item.menu_item,
+                    quantity=cart_item.quantity,
+                    price=cart_item.menu_item.price
+                )
+
         # Clear the cart after checkout
         cart.items.all().delete()
 
+        return render(request, 'orders/checkout.html', {
+            'total_cost': total_cost,
+        })
+
     except Cart.DoesNotExist:
-        total_cost = 0
-
-    return render(request, 'orders/checkout.html', {
-        'total_cost': total_cost,
-    })
-
+        messages.error(request, "Your cart is empty")
+        return redirect('cart')
 
 @login_required
 def order_success(request, order_id):
@@ -131,7 +151,6 @@ def order_success(request, order_id):
 def order_tracking(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'orders/order_tracking.html', {'orders': orders})
-
 
 def contact(request):
     if request.method == 'POST':
@@ -183,7 +202,7 @@ def profile_edit(request):
     else:
         form = ProfileEditForm(instance=request.user)
 
-    return render(request, 'orders/profile_edit.html', {'form': form})
+    return render(request, 'orders/profile.html', {'form': form})
 
 
 @login_required
