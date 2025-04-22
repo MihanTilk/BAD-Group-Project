@@ -23,4 +23,7 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='orders/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
+    path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
+    path('refund-policy/', views.refund_policy, name='refund_policy'),
 ]

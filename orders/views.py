@@ -240,3 +240,12 @@ class DisplayMenuView(View):
             'menu_items_by_category': menu_items_by_category  # For the menu sections
         }
         return render(request, 'orders/menu.html', context)
+
+def privacy_policy(request):
+    return render(request, 'orders/privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'orders/terms_of_service.html')
+
+def refund_policy(request):
+    return render(request, 'orders/refund_policy.html')
