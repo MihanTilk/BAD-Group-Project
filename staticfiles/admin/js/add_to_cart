@@ -1,0 +1,50 @@
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+  button.addEventListener('click', function (e) {
+    const itemId = this.dataset.itemId;
+
+    fetch(`/cart/add/${itemId}/`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': getCookie('csrftoken'),
+      }
+    })
+    .then(response => {
+      if (response.redirected) {
+        // Unauthenticated → redirect to login page
+        window.location.href = response.url;
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to add item to cart');
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      if (data && data.success) {
+        alert(data.message); // Show success message or update cart count
+      }
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+  });
+});
+
+// Helper to get CSRF token
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
