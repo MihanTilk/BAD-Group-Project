@@ -211,3 +211,56 @@ body {
     min-width: 250px;
     z-index: 9999;
 }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 0.5s ease-in-out;
+}
+
+.cart-counter, #cart-count {
+    /* Changed from 'none' to match your template logic */
+    display: inline-block;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    background-color: #ff6b6b;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    /* Added transition for smooth appearance */
+    transition: all 0.3s ease;
+}
+
+/* New conditional display rules */
+.cart-counter:empty,
+#cart-count:empty {
+    display: none !important;
+}
+
+.cart-counter[data-count="0"],
+#cart-count[data-count="0"] {
+    display: none !important;
+}
+
+/* For dynamic updates */
+.hidden-count {
+    display: none !important;
+    opacity: 0;
+    transform: scale(0);
+}
+
+.visible-count {
+    display: inline-block !important;
+    opacity: 1;
+    transform: scale(1);
+}

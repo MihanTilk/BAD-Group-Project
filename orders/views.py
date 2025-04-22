@@ -32,17 +32,19 @@ def menu(request):
 def cart(request):
     try:
         cart = Cart.objects.get(user=request.user)
-        cart_items = cart.items.all()  # Get all items in the cart
+        cart_items = cart.items.all()
         total = sum(item.total_price for item in cart_items)
+        # Store cart count in session
+        request.session['cart_count'] = cart.items.count()
     except Cart.DoesNotExist:
         cart_items = None
         total = 0
+        request.session['cart_count'] = 0
 
     return render(request, 'orders/pages/cart.html', {
-        'cart_items': cart_items,  # Pass items to template
-        'total_cost': total,       # Pass total cost
+        'cart_items': cart_items,
+        'total_cost': total,
     })
-
 
 @login_required
 def add_to_cart(request, item_id):
@@ -61,11 +63,12 @@ def add_to_cart(request, item_id):
             cart_item.save()
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            # Return JSON for AJAX requests
+            cart_count = cart.items.count()
+            request.session['cart_count'] = cart_count  # Store in session
             return JsonResponse({
                 'success': True,
                 'message': f"{menu_item.name} added to cart!",
-                'cart_count': cart.items.count(),
+                'cart_count': cart_count,
             })
         else:
             # Redirect for normal form submissions
@@ -110,6 +113,9 @@ def checkout(request):
         cart_items = cart.items.all()
         total_cost = sum(item.total_price for item in cart_items)
 
+        # Get cart count before clearing
+        cart_count = cart.items.count()
+
         # Create the order only if there are items in the cart
         if cart_items.exists():
             profile = request.user.profile
@@ -130,12 +136,17 @@ def checkout(request):
                     price=cart_item.menu_item.price
                 )
 
-        # Clear the cart after checkout
-        cart.items.all().delete()
+            # Clear the cart after successful order creation
+            cart.items.all().delete()
 
-        return render(request, 'orders/pages/checkout.html', {
-            'total_cost': total_cost,
-        })
+            # Set session cart count to 0
+            request.session['cart_count'] = 0
+
+            # Redirect to success page with order ID
+            return redirect('order_success', order_id=order.id)
+        else:
+            messages.error(request, "Your cart is empty")
+            return redirect('cart')
 
     except Cart.DoesNotExist:
         messages.error(request, "Your cart is empty")

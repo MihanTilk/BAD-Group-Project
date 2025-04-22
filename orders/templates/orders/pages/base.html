@@ -42,8 +42,11 @@
                 <div class="d-flex">
                     <a href="{% url 'cart' %}" class="btn btn-outline-primary position-relative me-3">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-counter" style="display: {% if request.user.cart.cart_item_set.count > 0 %}block{% else %}none{% endif %};">
-                            {{ request.user.cart.cartitem_set.count }}
+                        <span class="cart-count" id="cart-count"
+                              style="display: {% if request.session.cart_count|default:0 > 0 %}inline-block{% else %}none{% endif %};">
+                            {% if request.session.cart_count|default:0 > 0 %}
+                                {{ request.session.cart_count }}
+                            {% endif %}
                         </span>
                     </a>
                     {% if user.is_authenticated %}
@@ -182,15 +185,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest',  // Tell Django this is an AJAX request
+                    'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
                 },
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();  // Parse response as JSON
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
             })
             .then(data => {
                 if (data.success) {
@@ -200,23 +201,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     toastEl.style.display = 'block';
                     toast.show();
 
-                    // Update cart counter
-                    const counter = document.querySelector('.cart-counter');
-                    if (counter) {
-                        counter.textContent = data.cart_count;
-                        counter.style.display = data.cart_count > 0 ? 'block' : 'none';
+                    // Update cart counter - only show if count > 0
+                    const cartCounter = document.getElementById('cart-count');
+                    if (data.cart_count > 0) {
+                        cartCounter.textContent = data.cart_count;
+                        cartCounter.style.display = 'inline-block';
+                        cartCounter.classList.add('pulse');
+                        setTimeout(() => cartCounter.classList.remove('pulse'), 500);
+                    } else {
+                        cartCounter.style.display = 'none';
                     }
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Optionally show an error message
                 document.getElementById('toast-message').textContent = 'Failed to add item to cart.';
                 document.getElementById('cart-toast').style.display = 'block';
                 toast.show();
             });
         });
     });
+
+    // Initialize cart count from session on page load
+    const initialCount = {{ request.session.cart_count|default:0 }};
+    const cartCounter = document.getElementById('cart-count');
+    if (initialCount > 0) {
+        cartCounter.textContent = initialCount;
+        cartCounter.style.display = 'inline-block';
+    } else {
+        cartCounter.style.display = 'none';
+    }
 });
 </script>
 
