@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-5">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white text-center">
                     <h3><i class="fas fa-user-plus me-2"></i>Create Account</h3>
@@ -12,27 +12,100 @@
                 <div class="card-body p-4">
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
-                        
-                        {% if form.errors %}
+
+                        {% if form.non_field_errors %}
                             <div class="alert alert-danger">
                                 <i class="fas fa-exclamation-circle me-2"></i>
-                                Please correct the errors below.
+                                {{ form.non_field_errors }}
                             </div>
                         {% endif %}
-                        
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_first_name" class="form-label">
+                                    <i class="fas fa-user me-2"></i>First Name
+                                </label>
+                                <input type="text" name="first_name" class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                       id="id_first_name" required value="{{ form.first_name.value|default_if_none:'' }}">
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.first_name.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Last Name
+                                </label>
+                                <input type="text" name="last_name" class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                       id="id_last_name" required value="{{ form.last_name.value|default_if_none:'' }}">
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.last_name.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="id_username" class="form-label">
                                 <i class="fas fa-user me-2"></i>Username
                             </label>
-                            <input type="text" name="username" class="form-control" required id="id_username">
+                            <input type="text" name="username" class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                   required id="id_username" value="{{ form.username.value|default_if_none:'' }}">
                             <small class="form-text text-muted">150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.username.errors.0 }}
+                                </div>
+                            {% endif %}
                         </div>
-                        
+
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </label>
+                            <input type="email" name="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                   required id="id_email" value="{{ form.email.value|default_if_none:'' }}">
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.email.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_mobile_number" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Mobile Number
+                            </label>
+                            <input type="tel" name="mobile_number" class="form-control {% if form.mobile_number.errors %}is-invalid{% endif %}"
+                                   id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}">
+                            {% if form.mobile_number.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.mobile_number.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_address" class="form-label">
+                                <i class="fas fa-home me-2"></i>Address
+                            </label>
+                            <textarea name="address" class="form-control {% if form.address.errors %}is-invalid{% endif %}"
+                                      id="id_address" rows="3">{{ form.address.value|default_if_none:'' }}</textarea>
+                            {% if form.address.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.address.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
                         <div class="mb-3">
                             <label for="id_password1" class="form-label">
                                 <i class="fas fa-lock me-2"></i>Password
                             </label>
-                            <input type="password" name="password1" class="form-control" required id="id_password1">
+                            <input type="password" name="password1" class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                   required id="id_password1">
                             <small class="form-text text-muted">
                                 <ul>
                                     <li>Your password can't be too similar to your other personal information.</li>
@@ -41,16 +114,27 @@
                                     <li>Your password can't be entirely numeric.</li>
                                 </ul>
                             </small>
+                            {% if form.password1.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.password1.errors.0 }}
+                                </div>
+                            {% endif %}
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="id_password2" class="form-label">
                                 <i class="fas fa-lock me-2"></i>Password confirmation
                             </label>
-                            <input type="password" name="password2" class="form-control" required id="id_password2">
+                            <input type="password" name="password2" class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                   required id="id_password2">
                             <small class="form-text text-muted">Enter the same password as before, for verification.</small>
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.password2.errors.0 }}
+                                </div>
+                            {% endif %}
                         </div>
-                        
+
                         <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-user-plus me-2"></i>Sign Up
@@ -59,7 +143,7 @@
                     </form>
                 </div>
                 <div class="card-footer text-center bg-light">
-                    <p class="mb-0">Already have an account? 
+                    <p class="mb-0">Already have an account?
                         <a href="{% url 'login' %}" class="text-decoration-none">
                             <i class="fas fa-sign-in-alt me-1"></i>Login
                         </a>
@@ -69,4 +153,14 @@
         </div>
     </div>
 </div>
+
+<style>
+    .is-invalid {
+        border-color: #dc3545;
+    }
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+</style>
 {% endblock %}
