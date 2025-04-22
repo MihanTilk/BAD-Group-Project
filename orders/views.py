@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import MenuItem, Cart, CartItem, Order, OrderItem, ContactMessage
-from .forms import ContactForm, UserProfileForm
+from .models import MenuItem, Cart, CartItem, Order, OrderItem, ContactMessage, Profile
+from .forms import ContactForm, UserProfileForm, CustomUserCreationForm
 from django.http import JsonResponse
 from django.views import View
 from .forms import ProfileEditForm
@@ -197,15 +197,18 @@ def delete_account(request):
 def help(request):
     return render(request, 'orders/help.html')
 
+
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Log the user in automatically after signup
+            login(request, user)
             return redirect('home')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
+
+    # If form is invalid, it will show errors automatically in template
     return render(request, 'orders/signup.html', {'form': form})
 
 class MenuView(View):
