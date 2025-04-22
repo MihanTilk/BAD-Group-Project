@@ -105,25 +105,20 @@ def clear_cart(request):
 
 @login_required
 def checkout(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    order = Order.objects.create(
-        user=request.user,
-        total=cart.total_price,
-        delivery_address=request.user.profile.address,
-        contact_number=request.user.profile.mobile_number,
-        status='pending_payment'
-    )
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_items = cart.items.all()
+        total_cost = sum(item.total_price for item in cart_items)
 
-    for item in cart.items.all():
-        OrderItem.objects.create(
-            order=order,
-            menu_item=item.menu_item,
-            quantity=item.quantity,
-            price=item.menu_item.price
-        )
+        # Clear the cart after checkout
+        cart.items.all().delete()
 
-    cart.items.all().delete()
-    return redirect('order_success', order_id=order.id)
+    except Cart.DoesNotExist:
+        total_cost = 0
+
+    return render(request, 'orders/checkout.html', {
+        'total_cost': total_cost,
+    })
 
 
 @login_required

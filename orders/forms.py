@@ -32,14 +32,14 @@ class ProfileEditForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email']
 
     address = forms.CharField(max_length=255, required=False)
-    phone_number = forms.CharField(max_length=20, required=False)
+    mobile_number = forms.CharField(max_length=20, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
             profile = self.instance.profile
             self.fields['address'].initial = profile.address
-            self.fields['phone_number'].initial = profile.phone_number
+            self.fields['mobile_number'].initial = profile.mobile_number
         except Profile.DoesNotExist:
             pass
 
@@ -50,7 +50,7 @@ class ProfileEditForm(forms.ModelForm):
         except Profile.DoesNotExist:
             profile = Profile(user=user)
         profile.address = self.cleaned_data['address']
-        profile.phone_number = self.cleaned_data['phone_number']
+        profile.mobile_number = self.cleaned_data['mobile_number']
         if commit:
             profile.save()
         return user
