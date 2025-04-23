@@ -96,3 +96,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'  # Where users go after login
 LOGOUT_REDIRECT_URL = 'home'  # Where users go after logout
+
+# Email Configuration (settings.py)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # AIESEC uses Gmail for email
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tihara.liyanage@aiesec.net'  # Your AIESEC email
+EMAIL_HOST_PASSWORD = 'nagpdssyradbtkuv'  # Your 16-char app password (no spaces)
+DEFAULT_FROM_EMAIL = 'tihara.liyanage@aiesec.net'  # Sender email
+ADMINS = [('Tihara', 'tihara.liyanage@aiesec.net')]  # For error notifications

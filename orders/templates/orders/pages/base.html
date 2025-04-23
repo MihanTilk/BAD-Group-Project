@@ -14,6 +14,8 @@
     {% block extra_css %}{% endblock %}
 </head>
 
+
+
 <body>
     <!-- Fixed Navbar -->
     <nav class="navbar navbar-expand-lg navbar-overlay">
@@ -80,9 +82,23 @@
     {% block hero_section %}{% endblock %}
 
     <!-- Main Content -->
-    <main class="container main-content">
-        {% block content %}{% endblock %}
-    </main>
+<main class="container main-content">
+    {% if messages %}
+    <div class="row">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
 
 <hr class="my-4">
 
@@ -134,23 +150,26 @@
                 </div>
             </div>
 
-            <!-- Contact Us pushed to right -->
+            <!-- Replace the existing contact form section with this -->
             <div class="col-lg-4 col-md-6 order-lg-4 order-4">
                 <h5 class="mb-3">Contact Us</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <input type="text" class="form-control" name="full_name" placeholder="Full Name" required>
+                <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="name" placeholder="Full Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <input type="email" class="form-control" name="email" placeholder="Email" required>
+                        <div class="col-md-6">
+                            <textarea class="form-control h-100" name="message" placeholder="Your Message" required></textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <textarea class="form-control h-100" name="message" placeholder="Your Message" required></textarea>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Send</button>
+                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+                </form>
             </div>
         </div>
         <hr class="my-4">
