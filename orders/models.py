@@ -25,13 +25,25 @@ class MenuItem(models.Model):
         ('SIDE', 'Sides'),
     ]
 
+    MEAT_CHOICES = [
+        ('VEG', 'Vegetarian'),
+        ('CHK', 'Chicken'),
+        ('BEF', 'Beef'),
+        ('PRK', 'Pork'),
+        ('FIS', 'Fish'),
+        ('SEA', 'Seafood'),
+    ]
+
     name = models.CharField(max_length=100)
     description = models.TextField()
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     category = models.CharField(max_length=4, choices=CATEGORY_CHOICES)
-    image = models.CharField(max_length=255)
+    meat_category = models.CharField(
+    max_length=3,
+    choices=MEAT_CHOICES,
+    default='VEG'
+)  
+    image = models.CharField(max_length=100)
     is_special = models.BooleanField(default=False)
     available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -269,24 +269,44 @@ class MenuView(View):
 
 class DisplayMenuView(View):
     def get(self, request):
+        # Define your categories (should match model's CATEGORY_CHOICES)
         categories = [
             ('MAIN', 'Main Dishes'),
             ('RICE', 'Rice & Curry'),
             ('SAND', 'Sandwiches & Wraps'),
             ('SIDE', 'Sides & Snacks')
         ]
+        
+        # Get filter parameters from request
+        meat_filter = request.GET.get('meat', None)
+        category_filter = request.GET.get('category', None)
+        
+        # Base queryset
+        menu_items = MenuItem.objects.filter(available=True)
+        
+        # Apply filters if they exist
+        if meat_filter:
+            menu_items = menu_items.filter(meat_category=meat_filter)
+        if category_filter:
+            menu_items = menu_items.filter(category=category_filter)
+        
         # Organize menu items by category
         menu_items_by_category = []
         for value, name in categories:
-            items = MenuItem.objects.filter(category=value, available=True).order_by('name')
-            menu_items_by_category.append((value, name, items))
-
+            items = menu_items.filter(category=value).order_by('name')
+            if items.exists():  # Only add categories that have items
+                menu_items_by_category.append((value, name, items))
+        
         context = {
-            'categories': [(value, name) for value, name in categories],  # For the category cards
-            'menu_items_by_category': menu_items_by_category  # For the menu sections
+            'categories': [(value, name) for value, name in categories],  # For category cards
+            'menu_items_by_category': menu_items_by_category,  # For menu sections
+            'meat_categories': MenuItem.MEAT_CHOICES,  # For meat filter buttons
+            'current_meat_filter': meat_filter,  # To highlight active meat filter
+            'current_category_filter': category_filter  # To highlight active category filter
         }
+        
         return render(request, 'orders/pages/menu.html', context)
-
+    
 def privacy_policy(request):
     return render(request, 'orders/legal/privacy_policy.html')
 
