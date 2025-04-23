@@ -1,6 +1,9 @@
 from django.core.management.base import BaseCommand
 from orders.models import MenuItem
 
+from django.core.management.base import BaseCommand
+from orders.models import MenuItem
+
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Clear existing items
@@ -13,6 +16,7 @@ class Command(BaseCommand):
                 'description': 'Classic Italian pasta bake with rich tomato sauce and melted cheese',
                 'price': 1450.00,
                 'category': 'MAIN',
+                'meat_category': 'VEG',
                 'image': 'images/Baked_Ziti.jpg',
                 'is_special': True
             },
@@ -21,6 +25,7 @@ class Command(BaseCommand):
                 'description': 'Hearty beef stew with root vegetables in red wine sauce',
                 'price': 1650.00,
                 'category': 'MAIN',
+                'meat_category': 'BEF',
                 'image': 'images/Beef_Stew.jpg'
             },
             {
@@ -28,6 +33,7 @@ class Command(BaseCommand):
                 'description': 'Sweet corn kernels tossed in creamy butter',
                 'price': 450.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/Buttered_Corn.jpg'
             },
             {
@@ -35,6 +41,7 @@ class Command(BaseCommand):
                 'description': 'Classic comfort food with flaky pastry crust',
                 'price': 1350.00,
                 'category': 'MAIN',
+                'meat_category': 'CHK',
                 'image': 'images/Chicken_Pot_Pie.jpg'
             },
             {
@@ -42,6 +49,7 @@ class Command(BaseCommand):
                 'description': 'Grilled chicken wrap with fresh vegetables and garlic aioli',
                 'price': 950.00,
                 'category': 'SAND',
+                'meat_category': 'CHK',
                 'image': 'images/Chicken_Wrap_with_Garlic_Sauce.jpg'
             },
             {
@@ -49,14 +57,15 @@ class Command(BaseCommand):
                 'description': 'Triple-decker sandwich with turkey, bacon, lettuce and tomato',
                 'price': 1250.00,
                 'category': 'SAND',
+                'meat_category': 'CHK',
                 'image': 'images/Club_Sandwich.jpg'
             },
-            # Rice & Curry (RICE)
             {
                 'name': 'Coconut Milk Rice with Onion Sambal',
                 'description': 'Fragrant coconut rice served with traditional onion sambal',
                 'price': 950.00,
                 'category': 'RICE',
+                'meat_category': 'VEG',
                 'image': 'images/Coconut_Milk_Rice_with_Onion_Sambal.jpg',
                 'is_special': True
             },
@@ -65,6 +74,7 @@ class Command(BaseCommand):
                 'description': 'Crispy cabbage and carrot salad with creamy dressing',
                 'price': 400.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/Coleslaw.jpg'
             },
             {
@@ -72,6 +82,7 @@ class Command(BaseCommand):
                 'description': 'Sri Lankan-style chicken curry with steamed rice',
                 'price': 1450.00,
                 'category': 'RICE',
+                'meat_category': 'CHK',
                 'image': 'images/Creamy_Chicken_Curry_with_Rice.jpg',
                 'is_special': True
             },
@@ -80,14 +91,15 @@ class Command(BaseCommand):
                 'description': 'Rich and creamy chicken pot pie with flaky crust',
                 'price': 1450.00,
                 'category': 'MAIN',
+                'meat_category': 'CHK',
                 'image': 'images/Creamy_Chicken_Pot_Pie.jpg'
             },
-            # Sides (SIDE)
             {
                 'name': 'French Fries',
                 'description': 'Crispy golden fries served with ketchup',
                 'price': 450.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/French_Fries.jpg'
             },
             {
@@ -95,6 +107,7 @@ class Command(BaseCommand):
                 'description': 'Southern-style crispy chicken with maple syrup waffles',
                 'price': 1650.00,
                 'category': 'MAIN',
+                'meat_category': 'CHK',
                 'image': 'images/Fried_Chicken_and_Waffles.jpg'
             },
             {
@@ -102,6 +115,7 @@ class Command(BaseCommand):
                 'description': 'Wok-fried rice with egg, sausage and vegetables',
                 'price': 1250.00,
                 'category': 'MAIN',
+                'meat_category': 'PRK',
                 'image': 'images/Fried_Rice_with_Egg_and_Sausage.jpg'
             },
             {
@@ -109,14 +123,15 @@ class Command(BaseCommand):
                 'description': 'Toasted bread with garlic butter and herbs',
                 'price': 400.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/Garlic_Bread.jpg'
             },
-            # Sandwiches (SAND)
             {
                 'name': 'Gourmet Burger',
                 'description': 'Premium beef patty with cheese and special sauce',
                 'price': 1550.00,
                 'category': 'SAND',
+                'meat_category': 'BEF',
                 'image': 'images/Gourmet_Burger.jpg',
                 'is_special': True
             },
@@ -125,6 +140,7 @@ class Command(BaseCommand):
                 'description': 'Golden toasted sandwich with three cheese blend',
                 'price': 850.00,
                 'category': 'SAND',
+                'meat_category': 'VEG',
                 'image': 'images/Grilled_Cheese_Sandwich.jpg'
             },
             {
@@ -132,6 +148,7 @@ class Command(BaseCommand):
                 'description': 'Sri Lankan chopped roti with vegetables and meat',
                 'price': 1350.00,
                 'category': 'MAIN',
+                'meat_category': 'CHK',
                 'image': 'images/Kottu_Roti.jpg',
                 'is_special': True
             },
@@ -140,6 +157,7 @@ class Command(BaseCommand):
                 'description': 'Layered pasta with meat sauce and cheese',
                 'price': 1450.00,
                 'category': 'MAIN',
+                'meat_category': 'BEF',
                 'image': 'images/Lasagna.jpg'
             },
             {
@@ -147,6 +165,7 @@ class Command(BaseCommand):
                 'description': 'Crispy tortilla chips with cheese, salsa and guacamole',
                 'price': 950.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/Loaded_Nachos.jpg'
             },
             {
@@ -154,6 +173,7 @@ class Command(BaseCommand):
                 'description': 'Creamy macaroni cheese with crispy bacon bits',
                 'price': 1250.00,
                 'category': 'SIDE',
+                'meat_category': 'PRK',
                 'image': 'images/Mac_and_Cheese_Bacon.jpg'
             },
             {
@@ -161,6 +181,7 @@ class Command(BaseCommand):
                 'description': 'Traditional creamy macaroni and cheese',
                 'price': 1150.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/Mac_and_Cheese_Classic.jpg'
             },
             {
@@ -168,6 +189,7 @@ class Command(BaseCommand):
                 'description': 'Creamy mashed potatoes with rich beef gravy',
                 'price': 550.00,
                 'category': 'SIDE',
+                'meat_category': 'BEF',
                 'image': 'images/Mashed_Potatoes_with_Gravy.jpg'
             },
             {
@@ -175,6 +197,7 @@ class Command(BaseCommand):
                 'description': 'Homestyle meatloaf with mushroom gravy',
                 'price': 1450.00,
                 'category': 'MAIN',
+                'meat_category': 'BEF',
                 'image': 'images/Meatloaf_with_Gravy.jpg'
             },
             {
@@ -182,6 +205,7 @@ class Command(BaseCommand):
                 'description': 'Crispy beer-battered onion rings',
                 'price': 650.00,
                 'category': 'SIDE',
+                'meat_category': 'VEG',
                 'image': 'images/Onion_Rings.jpg'
             },
             {
@@ -189,6 +213,7 @@ class Command(BaseCommand):
                 'description': 'Classic Italian pasta with egg and pancetta',
                 'price': 1550.00,
                 'category': 'MAIN',
+                'meat_category': 'PRK',
                 'image': 'images/Pasta_Carbonara.jpg'
             },
             {
@@ -196,6 +221,7 @@ class Command(BaseCommand):
                 'description': 'Sliced steak with melted cheese and caramelized onions',
                 'price': 1650.00,
                 'category': 'SAND',
+                'meat_category': 'BEF',
                 'image': 'images/Philly_Cheesesteak.jpg'
             },
             {
@@ -203,6 +229,7 @@ class Command(BaseCommand):
                 'description': 'Slow-cooked pork shoulder with BBQ sauce',
                 'price': 1450.00,
                 'category': 'SAND',
+                'meat_category': 'PRK',
                 'image': 'images/Pulled_Pork_Sandwich.jpg'
             },
             {
@@ -210,6 +237,7 @@ class Command(BaseCommand):
                 'description': 'Ground meat pie with mashed potato topping',
                 'price': 1350.00,
                 'category': 'MAIN',
+                'meat_category': 'BEF',
                 'image': 'images/Shepherds_Pie.jpg'
             },
             {
@@ -217,6 +245,7 @@ class Command(BaseCommand):
                 'description': 'Classic spaghetti with homemade meatballs',
                 'price': 1450.00,
                 'category': 'MAIN',
+                'meat_category': 'BEF',
                 'image': 'images/Spaghetti_and_Meatballs.jpg'
             },
             {
@@ -224,6 +253,7 @@ class Command(BaseCommand):
                 'description': 'Traditional lentil curry with coconut milk',
                 'price': 850.00,
                 'category': 'RICE',
+                'meat_category': 'VEG',
                 'image': 'images/Sri_Lankan_Dhal_Curry.jpg'
             },
             {
@@ -231,6 +261,7 @@ class Command(BaseCommand):
                 'description': 'Bell peppers stuffed with rice and minced meat',
                 'price': 1250.00,
                 'category': 'MAIN',
+                'meat_category': 'BEF',
                 'image': 'images/Stuffed_Bell_Peppers.jpg'
             },
             {
@@ -238,17 +269,18 @@ class Command(BaseCommand):
                 'description': 'Tuna salad melt with melted cheddar cheese',
                 'price': 1150.00,
                 'category': 'SAND',
+                'meat_category': 'FIS',
                 'image': 'images/Toasted_Tuna_Melt.jpg'
             },
         ]
 
-        # Create menu items
         for item_data in menu_items_data:
             MenuItem.objects.create(
                 name=item_data['name'],
                 description=item_data['description'],
                 price=item_data['price'],
                 category=item_data['category'],
+                meat_category=item_data['meat_category'],
                 image=item_data['image'],
                 is_special=item_data.get('is_special', False),
                 available=True
