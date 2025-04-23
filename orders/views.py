@@ -8,6 +8,11 @@ from .forms import ContactForm, UserProfileForm, CustomUserCreationForm
 from django.http import JsonResponse
 from django.views import View
 from .forms import ProfileEditForm
+from django.core.mail import send_mail, mail_admins
+from django.conf import settings
+from django.shortcuts import render, redirect
+from .forms import ContactForm
+from .models import ContactMessage
 
 def home(request):
     specials = MenuItem.objects.filter(is_special=True)[:4]
@@ -163,24 +168,35 @@ def order_tracking(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'orders/my_orders/order_tracking.html', {'orders': orders})
 
-def contact(request):
+def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            # Handle form data without saving to database
-            # Example: send email instead
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Your message has been sent!'
-            })
-        return JsonResponse({
-            'status': 'error',
-            'errors': form.errors
-        }, status=400)
-    return JsonResponse({
-        'status': 'error',
-        'message': 'Invalid method'
-    }, status=405)
+            # Save the message to database
+            contact_message = form.save()
+            
+            # Send email to admin
+            mail_admins(
+                subject=f"New Contact Message from {contact_message.name}",
+                message=f"Name: {contact_message.name}\nEmail: {contact_message.email}\n\nMessage:\n{contact_message.message}",
+                fail_silently=False,
+            )
+            
+            # Send confirmation email to user
+            send_mail(
+                subject="Your message has been received",
+                message=f"Dear {contact_message.name},\n\nThank you for contacting us. We have received your message and will get back to you soon.\n\nYour message:\n{contact_message.message}\n\nBest regards,\nThe Warm & Whisked Team",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[contact_message.email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, 'Your message has been sent successfully!')
+            return redirect(request.META.get('HTTP_REFERER', 'home'))
+    else:
+        form = ContactForm()
+    
+    return render(request, 'contact.html', {'form': form})
 
 
 @login_required

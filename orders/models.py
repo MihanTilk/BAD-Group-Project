@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import EmailValidator
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -119,10 +121,11 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class ContactMessage(models.Model):
-    full_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    name = models.CharField(max_length=100)
+    email = models.EmailField(validators=[EmailValidator()])
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_processed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Message from {self.full_name}"
+        return f"Message from {self.name} ({self.email})"
