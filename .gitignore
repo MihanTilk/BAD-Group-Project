@@ -1,28 +1,10 @@
-# Virtual environment
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
 venv/
-.venv
-
-# Python bytecode files
-__pycache__/
-*.pyc
-*.pyo
-
-# Django SQLite database
-db.sqlite3
-
-# Django media files (uploaded by users)
-media/
-
-
-# IDE-specific files
-.vscode/
-.idea/
-
-# Python distribution and packaging
-build/
-dist/
-*.egg-info/
-
-# Environment files
-.env
- 

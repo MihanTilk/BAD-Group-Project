@@ -1,70 +1,81 @@
-# orders/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django import forms
-from django.core.exceptions import ValidationError
-from .models import User, Profile  # Import your custom user model and profile model
+from .models import Profile
+from django.db import models
+from .models import ContactMessage
 
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 3}),
+        }
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your Message', 'rows': 5}),
+        }
 
 class CustomUserCreationForm(UserCreationForm):
-    terms_and_conditions = forms.BooleanField(required=True, label="I agree to the terms and conditions")
-    address = forms.CharField(max_length=255)
-    mobile_number = forms.CharField(max_length=20, required=False, label="Mobile Number")
+    email = forms.EmailField(required=True, label="Email")
+    first_name = forms.CharField(required=True, label="First Name")
+    last_name = forms.CharField(required=True, label="Last Name")
+    mobile_number = forms.CharField(required=False, label="Mobile Number")
+    address = forms.CharField(widget=forms.Textarea, required=False, label="Address")
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ("username", "email", "first_name", "last_name",
+                  "password1", "password2", "mobile_number", "address")
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Username already exists. Please choose another one.")
-        return username
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with that email already exists.")
-        return email
+        if commit:
+            user.save()
+            profile = user.profile
+            profile.mobile_number = self.cleaned_data['mobile_number']
+            profile.address = self.cleaned_data['address']
+            profile.save()
+        return user
 
-def save(self, commit=True):
-    user = super().save(commit=False)
-    user.email = self.cleaned_data['email']  # Ensures email is saved
-    if commit:
-        user.save()
-
-        # Check if profile already exists before creating a new one
-        if not Profile.objects.filter(user=user).exists():
-            Profile.objects.create(
-                user=user,
-                address=self.cleaned_data['address'],
-                phone_number=self.cleaned_data.get('mobile_number')
-            )
-    return user
-
-
-
-# Login Form
-class LoginForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
-        required=True
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}),
-        required=True
-    )
-
-
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
+class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['first_name', 'last_name', 'email']
 
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['address', 'phone_number']
+    address = forms.CharField(max_length=255, required=False)
+    mobile_number = forms.CharField(max_length=20, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            profile = self.instance.profile
+            self.fields['address'].initial = profile.address
+            self.fields['mobile_number'].initial = profile.mobile_number
+        except Profile.DoesNotExist:
+            pass
+
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        try:
+            profile = user.profile
+        except Profile.DoesNotExist:
+            profile = Profile(user=user)
+        profile.address = self.cleaned_data['address']
+        profile.mobile_number = self.cleaned_data['mobile_number']
+        if commit:
+            profile.save()
+        return user

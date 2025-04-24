@@ -1,21 +1,15 @@
-import os
 from pathlib import Path
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.contrib import staticfiles
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-SECRET_KEY = 'django-insecure--6*8^=*5q-d1u(9+pd7qdn*$o4-x__&8qry=d3$%3ac%m4-20l'
+SECRET_KEY = 'your-secret-key'
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -24,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'orders',  # Your app for orders
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -42,7 +36,7 @@ ROOT_URLCONF = 'restaurant_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'orders/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,8 +51,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'restaurant_project.wsgi.application'
 
-
-# Database settings (SQLite in this case)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -66,8 +58,6 @@ DATABASES = {
     }
 }
 
-
-# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -83,20 +73,36 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization settings
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
 
+# Set timezone to Sri Lanka
+TIME_ZONE = 'Asia/Colombo'
+USE_TZ = True  # Store datetimes in UTC, convert to Asia/Colombo when displayed
+USE_I18N = True  # Internationalization
+USE_L10N = True  # Localized formatting
 
-# Static files configuration
-STATIC_URL = '/static/'  # Correct STATIC_URL
-
-# This defines the directory where static files will be stored on the server
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Ensure this path points to your 'static' folder
+    os.path.join(BASE_DIR, 'orders/static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'  # Where users go after login
+LOGOUT_REDIRECT_URL = 'home'  # Where users go after logout
+
+# Email Configuration (settings.py)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # AIESEC uses Gmail for email
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tihara.liyanage@aiesec.net'  # Your AIESEC email
+EMAIL_HOST_PASSWORD = 'nagpdssyradbtkuv'  # Your 16-char app password (no spaces)
+DEFAULT_FROM_EMAIL = 'tihara.liyanage@aiesec.net'  # Sender email
+ADMINS = [('Tihara', 'tihara.liyanage@aiesec.net')]  # For error notifications

@@ -1,0 +1,136 @@
+{% extends 'orders/pages/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Shopping Cart</h1>
+
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>{{ item.menu_item.name }}</td>
+                                <td>
+                                    <form action="{% url 'update_cart' item.id %}" method="post" class="quantity-form">
+                                        {% csrf_token %}
+                                        <div class="input-group" style="width: 120px;">
+                                            <button class="btn btn-outline-secondary decrement" type="button">-</button>
+                                            <input type="number" name="quantity" class="form-control text-center"
+                                                   value="{{ item.quantity }}" min="1">
+                                            <button class="btn btn-outline-secondary increment" type="button">+</button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>LKR {{ item.menu_item.price }}</td>
+                                <td>LKR {{ item.total_price }}</td>
+                                <td>
+                                    <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5>Subtotal:</h5>
+                        <h5>LKR {{ total_cost }}</h5>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <a href="{% url 'checkout' %}" class="btn btn-primary">
+                            <i class="bi bi-bag-check"></i> Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Similar items -->
+    <div class="row">
+        <div class="col">
+            <h3 class="mb-4">Explore similar food</h3>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                {% for item in similar_items %}
+                <div class="col">
+                    <div class="card h-100 menu-card">
+                        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">LKR {{ item.price }}</span>
+                                <form action="{% url 'add_to_cart' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        Your cart is empty. <a href="{% url 'orders' %}">Browse our menu</a> to add items.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity increment/decrement buttons
+    document.querySelectorAll('.increment').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentNode.querySelector('input[type=number]');
+            input.value = parseInt(input.value) + 1;
+            this.closest('form').submit();
+        });
+    });
+
+    document.querySelectorAll('.decrement').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentNode.querySelector('input[type=number]');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                this.closest('form').submit();
+            }
+        });
+    });
+
+    // Auto-submit when quantity input changes
+    document.querySelectorAll('input[name=quantity]').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value >= 1) {
+                this.closest('form').submit();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

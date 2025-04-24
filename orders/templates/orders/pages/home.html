@@ -1,0 +1,149 @@
+{% extends 'orders/pages/base.html' %}
+{% load static %}
+
+{% block hero_section %}
+<div class="hero-container">
+    <img src="{% static 'images/hero.jpg' %}" alt="Hero Image" class="hero-img">
+</div>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Today's Specials -->
+<!-- Carousel Container -->
+<div class="container my-5">
+    <h3 class="text-center mb-4">Today's Specials</h3>
+
+    <div class="position-relative">
+        <!-- Carousel with Items -->
+        <div class="horizontal-scroll-wrapper d-flex overflow-hidden" style="scroll-behavior: smooth;">
+            {% for item in specials %}
+            <div class="col-md-4 mb-4 flex-shrink-0 px-2" style="width: 33.33%;">
+                <div class="card shadow h-100">
+                    <img src="{% static item.image %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ item.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">{{ item.description }}<br><br><strong>LKR {{ item.price }}</strong></p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <form action="{% url 'add_to_cart' item_id=item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Arrows -->
+        {% if specials|length > 3 %}
+        <button class="carousel-control-prev position-absolute start-0 top-50 translate-middle-y bg-dark rounded-circle p-2" onclick="scrollCarousel(-1)" style="left: -20px;">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next position-absolute end-0 top-50 translate-middle-y bg-dark rounded-circle p-2" onclick="scrollCarousel(1)" style="right: -20px;">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript for Carousel -->
+<script>
+    function scrollCarousel(direction) {
+        const container = document.querySelector('.horizontal-scroll-wrapper');
+        const scrollAmount = container.clientWidth * 0.33 * direction;
+        container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+</script>
+
+<!-- CSS Styling -->
+<style>
+    .horizontal-scroll-wrapper {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+    .horizontal-scroll-wrapper::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+    .carousel-control-prev, .carousel-control-next {
+        width: 40px;
+        height: 40px;
+    }
+</style>
+
+<section class="order-now py-5 bg-light">
+    <div class="container text-center">
+        <a href="{% url 'orders' %}" class="btn btn-primary btn-lg px-4">Go to Menu</a>
+    </div>
+</section>
+
+<!-- Customer Reviews -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Customer Reviews</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-quote-left fa-2x text-muted"></i>
+                        </div>
+                        <p class="card-text">"The food was absolutely delicious! Will definitely order again."</p>
+                        <p class="text-muted">- Mihan T.</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-quote-left fa-2x text-muted"></i>
+                        </div>
+                        <p class="card-text">"Fast delivery and the packaging was excellent. Food arrived hot and fresh."</p>
+                        <p class="text-muted">- Tihara L.</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-quote-left fa-2x text-muted"></i>
+                        </div>
+                        <p class="card-text">"Great variety of options. The portions are generous and prices reasonable."</p>
+                        <p class="text-muted">- Saveen F.</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

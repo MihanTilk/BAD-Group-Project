@@ -1,0 +1,15 @@
+{% extends 'orders/pages/base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="text-success">Order Confirmed! 🎉</h2>
+    <p class="lead mt-3">
+        Your food is on its way. Kindly have the payment ready for our delivery rider.<br>
+        <strong>Total: LKR {{ total_cost }}</strong>
+    </p>
+    <p class="mt-4">Thanks for choosing us — we’ll see you soon!!️</p>
+    <a href="{% url 'orders' %}" class="btn btn-outline-primary mt-3">Back to Menu</a>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'orders/pages/base.html' %}
+{% load static %}
+
+{% block title %}Menu - Warm & Whisked{% endblock %}
+
+{% block content %}
+<h1 class="text-center my-4">Our Menu</h1>
+
+<!-- Filter Section -->
+<div class="container mb-5">
+    <form method="get" class="row g-3 align-items-end">
+        <!-- Meat Category Dropdown -->
+        <div class="col-md-4">
+            <label for="meatFilter" class="form-label">Filter by Protein:</label>
+            <select name="meat" id="meatFilter" class="form-select">
+                <option value="" {% if not current_meat_filter %}selected{% endif %}>All</option>
+                {% for value, name in meat_categories %}
+                    <option value="{{ value }}" {% if current_meat_filter == value %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Dish Category Dropdown -->
+        <div class="col-md-4">
+            <label for="categoryFilter" class="form-label">Filter by Dish Type:</label>
+            <select name="category" id="categoryFilter" class="form-select">
+                <option value="" {% if not current_category_filter %}selected{% endif %}>All</option>
+                {% for value, name in categories %}
+                    <option value="{{ value }}" {% if current_category_filter == value %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Price Sorting Dropdown -->
+        <div class="col-md-2">
+            <label for="priceSort" class="form-label">Sort by Price:</label>
+            <select name="price_sort" id="priceSort" class="form-select">
+                <option value="" {% if not current_price_sort %}selected{% endif %}>Default</option>
+                <option value="asc" {% if current_price_sort == 'asc' %}selected{% endif %}>Low to High</option>
+                <option value="desc" {% if current_price_sort == 'desc' %}selected{% endif %}>High to Low</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 text-end">
+            <button type="submit" class="btn btn-primary">Apply</button>
+            <a href="{% url 'orders' %}" class="btn btn-outline-secondary ms-2">Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Menu Items by Category -->
+{% for category in menu_items_by_category %}
+<section id="{{ category.0|slugify }}">
+    <h2 class="text-center">{{ category.1 }}</h2>
+    <div class="container my-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for item in category.2 %}
+            <div class="col">
+                <div class="card shadow h-100">
+                    <img src="{% static item.image %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ item.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <span class="badge bg-info text-dark mb-2">
+                            {{ item.get_meat_category_display }}
+                        </span>
+                        <p class="card-text">{{ item.description }}</p>
+                        <p class="card-text"><strong>LKR {{ item.price }}</strong></p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <form action="{% url 'add_to_cart' item_id=item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

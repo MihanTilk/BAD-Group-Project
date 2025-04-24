@@ -1,251 +1,338 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import CustomUserCreationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from .forms import LoginForm  # Assuming you have a form for login
-from django.contrib.auth import authenticate, login
-from .models import MenuItem
-
-
-# This view function handles requests to the homepage of the orders app.
-# Home page view
-def index(request):
-    return render(request, 'orders/index.html')
-
-# Sign-up view
-# views.py
 from django.contrib.auth import login
+from django.contrib import messages
+from .models import MenuItem, Cart, CartItem, Order, OrderItem, ContactMessage, Profile
+from .forms import ContactForm, UserProfileForm, CustomUserCreationForm
+from django.http import JsonResponse
+from django.views import View
+from .forms import ProfileEditForm
+from django.core.mail import send_mail, mail_admins
+from django.conf import settings
+from django.shortcuts import render, redirect
+from .forms import ContactForm
+from .models import ContactMessage
 
-def sign_up(request):
-    if request.method == "POST":
+def home(request):
+    specials = MenuItem.objects.filter(is_special=True)[:4]
+    categories = MenuItem.CATEGORY_CHOICES
+    return render(request, 'orders/pages/home.html', {
+        'specials': specials,
+        'categories': categories
+    })
+
+
+def menu(request):
+    category = request.GET.get('category', 'MAIN')
+    menu_items = MenuItem.objects.filter(category=category, available=True)
+    return render(request, 'orders/pages/menu.html', {
+        'menu_items': menu_items,
+        'categories': MenuItem.CATEGORY_CHOICES,
+        'current_category': category
+    })
+
+
+@login_required
+def cart(request):
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_items = cart.items.all()
+        total = sum(item.total_price for item in cart_items)
+        # Store cart count in session
+        request.session['cart_count'] = cart.items.count()
+    except Cart.DoesNotExist:
+        cart_items = None
+        total = 0
+        request.session['cart_count'] = 0
+
+    return render(request, 'orders/pages/cart.html', {
+        'cart_items': cart_items,
+        'total_cost': total,
+    })
+
+@login_required
+def add_to_cart(request, item_id):
+    if request.method == 'POST':
+        menu_item = get_object_or_404(MenuItem, id=item_id)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            menu_item=menu_item,
+            defaults={'quantity': 1}
+        )
+
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            cart_count = cart.items.count()
+            request.session['cart_count'] = cart_count  # Store in session
+            return JsonResponse({
+                'success': True,
+                'message': f"{menu_item.name} added to cart!",
+                'cart_count': cart_count,
+            })
+        else:
+            # Redirect for normal form submissions
+            messages.success(request, f"{menu_item.name} added to cart!")
+            return redirect('orders')
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+
+@login_required
+def update_cart(request, cart_item_id):  # Changed parameter name
+    cart_item = get_object_or_404(CartItem, id=cart_item_id, cart__user=request.user)
+
+    if request.method == 'POST':
+        new_quantity = int(request.POST.get('quantity', 1))
+
+        if new_quantity < 1:
+            cart_item.delete()
+        else:
+            cart_item.quantity = new_quantity
+            cart_item.save()
+
+    return redirect('cart')
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    cart_item.delete()
+    return redirect('cart')
+
+
+@login_required
+def clear_cart(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart.items.all().delete()
+    return redirect('cart')
+
+
+@login_required
+def checkout(request):
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_items = cart.items.all()
+        total_cost = sum(item.total_price for item in cart_items)
+
+        # Get cart count before clearing
+        cart_count = cart.items.count()
+
+        # Create the order only if there are items in the cart
+        if cart_items.exists():
+            profile = request.user.profile
+            order = Order.objects.create(
+                user=request.user,
+                total=total_cost,
+                delivery_address=profile.address,
+                contact_number=profile.mobile_number,
+                status='preparing'
+            )
+
+            # Create order items
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    menu_item=cart_item.menu_item,
+                    quantity=cart_item.quantity,
+                    price=cart_item.menu_item.price
+                )
+
+            # Clear the cart after successful order creation
+            cart.items.all().delete()
+
+            # Set session cart count to 0
+            request.session['cart_count'] = 0
+
+            # Redirect to success page with order ID
+            return redirect('order_success', order_id=order.id)
+        else:
+            messages.error(request, "Your cart is empty")
+            return redirect('cart')
+
+    except Cart.DoesNotExist:
+        messages.error(request, "Your cart is empty")
+        return redirect('cart')
+
+@login_required
+def order_success(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'orders/my_orders/order_success.html', {'order': order})
+
+
+@login_required
+def order_tracking(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'orders/my_orders/order_tracking.html', {'orders': orders})
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Save the message to database
+            contact_message = form.save()
+            
+            # Send email to admin
+            mail_admins(
+                subject=f"New Contact Message from {contact_message.name}",
+                message=f"Name: {contact_message.name}\nEmail: {contact_message.email}\n\nMessage:\n{contact_message.message}",
+                fail_silently=False,
+            )
+            
+            # Send confirmation email to user
+            send_mail(
+                subject="Your message has been received",
+                message=f"Dear {contact_message.name},\n\nThank you for contacting us. We have received your message and will get back to you soon.\n\nYour message:\n{contact_message.message}\n\nBest regards,\nThe Warm & Whisked Team",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[contact_message.email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, 'Your message has been sent successfully!')
+            return redirect(request.META.get('HTTP_REFERER', 'home'))
+    else:
+        form = ContactForm()
+    
+    return render(request, 'orders/pages/contact.html', {'form': form})
+
+
+@login_required
+def profile(request):
+    try:
+        profile = request.user.profile
+    except AttributeError:
+        from .models import Profile
+        profile = Profile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=profile)
+    return render(request, 'orders/pages/profile.html', {'form': form})
+
+
+@login_required
+def profile_edit(request):
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')
+    else:
+        form = ProfileEditForm(instance=request.user)
+
+    return render(request, 'orders/pages/profile.html', {'form': form})
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        request.user.delete()
+        messages.success(request, 'Your account has been deleted.')
+        return redirect('home')
+    return redirect('profile')
+
+def help(request):
+    return render(request, 'orders/pages/help.html')
+
+
+def signup(request):
+    if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            # Check if the user already exists
-            username = form.cleaned_data['username']
-            if User.objects.filter(username=username).exists():
-                # If the user already exists, show a message
-                messages.error(request, "This username is already taken. Please login.")
-                return redirect('login')  # Redirect to the login page
-            else:
-                # If user doesn't exist, save and log them in
-                user = form.save()
-                login(request, user)
-                messages.success(request, "Account created successfully! You are now logged in.")
-                return redirect('index')
-        else:
-            messages.error(request, "Please correct the errors below.")
+            user = form.save()
+            login(request, user)
+            return redirect('home')
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'orders/sign_up.html', {'form': form})
+    # If form is invalid, it will show errors automatically in template
+    return render(request, 'orders/pages/signup.html', {'form': form})
 
-
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            messages.success(request, f"Welcome back, {user.username}!")
-            return redirect('index')  # change to your landing page
-        else:
-            messages.error(request, "Invalid username or password.")
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'orders/login.html', {'form': form})
-
-from django.contrib.auth import logout
-
-def logout_view(request):
-    logout(request)
-    messages.info(request, "You’ve been logged out.")
-    return redirect('index')
-
-
-
-def main_dishes(request):
-    dishes = [
-        {"name": "Mac & Cheese (classic)", "price": 850, "image": "https://source.unsplash.com/300x200/?mac-and-cheese"},
-        {"name": "Mac & Cheese (bacon/truffle/jalapeño)", "price": 1_100, "image": "https://source.unsplash.com/300x200/?mac-and-cheese-bacon"},
-        {"name": "Chicken Pot Pie", "price": 1_250, "image": "https://source.unsplash.com/300x200/?chicken-pot-pie"},
-        {"name": "Beef Stew", "price": 1_350, "image": "https://source.unsplash.com/300x200/?beef-stew"},
-        {"name": "Shepherd’s Pie", "price": 1_200, "image": "https://source.unsplash.com/300x200/?shepherds-pie"},
-        {"name": "Fried Chicken & Waffles", "price": 1_400, "image": "https://source.unsplash.com/300x200/?fried-chicken-waffles"},
-        {"name": "Meatloaf with Gravy", "price": 1_300, "image": "https://source.unsplash.com/300x200/?meatloaf"},
-        {"name": "Spaghetti & Meatballs", "price": 1_150, "image": "https://source.unsplash.com/300x200/?spaghetti-meatballs"},
-        {"name": "Baked Ziti", "price": 1_100, "image": "https://source.unsplash.com/300x200/?baked-ziti"},
-        {"name": "Stuffed Bell Peppers", "price": 1_000, "image": "https://source.unsplash.com/300x200/?stuffed-peppers"},
-        {"name": "Lasagna (beef/veg/chicken)", "price": 1_250, "image": "https://source.unsplash.com/300x200/?lasagna"},
-    ]
-    items = MenuItem.objects.filter(category="Main Dishes")
-    return render(request, 'orders/main_dishes.html', {'items': items})
-
-def rice_curry_comforts(request):
-    rice_curry_items = [
-        {'item': 'Creamy Chicken Curry with Rice', 'price': 1200},
-        {'item': 'Sri Lankan Dhal Curry', 'price': 800},
-        {'item': 'Coconut Milk Rice with Onion Sambal', 'price': 750},
-        {'item': 'Fried Rice with Egg and Sausage', 'price': 1050},
-        {'item': 'Kottu Roti (chicken/beef/egg)', 'price': '950 – 1200'}
-    ]
-    
-    return render(request, 'orders/rice_curry_comforts.html', {'items': rice_curry_items})
-
-def sandwiches_wraps(request):
-    items = [
-        {"item": "Grilled Cheese Sandwich", "price": 700, "image": "grilled_cheese_sandwich.jpg"},
-        {"item": "Philly Cheesesteak", "price": 1200, "image": "philly_cheesesteak.jpg"},
-        {"item": "Club Sandwich", "price": 1000, "image": "club_sandwich.jpg"},
-        {"item": "Pulled Pork Sandwich", "price": 1150, "image": "pulled_pork_sandwich.jpg"},
-        {"item": "Chicken Wrap with Garlic Sauce", "price": 950, "image": "chicken_wrap_with_garlic_sauce.jpg"},
-        {"item": "Toasted Tuna Melt", "price": 950, "image": "toasted_tuna_melt.jpg"}
-    ]
-    return render(request, 'orders/sandwiches_wraps.html', {'items': items})
-
-def sides_snacks(request):
-    items = [
-        {"item": "Mashed Potatoes with Gravy", "price": 500, "image": "mashed_potatoes_with_gravy.jpg"},
-        {"item": "French Fries / Wedges / Curly Fries", "price": 450, "image": "french_fries.jpg"},
-        {"item": "Onion Rings", "price": 500, "image": "onion_rings.jpg"},
-        {"item": "Coleslaw", "price": 350, "image": "coleslaw.jpg"},
-        {"item": "Buttered Corn", "price": 400, "image": "buttered_corn.jpg"},
-        {"item": "Garlic Bread", "price": 450, "image": "garlic_bread.jpg"},
-        {"item": "Loaded Nachos", "price": 1_100, "image": "loaded_nachos.jpg"}
-    ]
-    return render(request, 'orders/sides_snacks.html', {'items': items})
-
-
-def about(request):
-    # Logic to render the About page
-    return render(request, 'orders/about.html')
-
-from django.shortcuts import render
-
-def menu(request):
-    # Define the menu items
-    menu = {
-        'Main Dishes': [
-            {'name': 'Mac & Cheese (classic)', 'price': 850, 'slug': 'mac_and_cheese_classic'},
-            {'name': 'Mac & Cheese (bacon/truffle/jalapeño)', 'price': 1100, 'slug': 'mac_and_cheese_bacon'},
-            {'name': 'Chicken Pot Pie', 'price': 1250, 'slug': 'chicken_pot_pie'},
-            {'name': 'Beef Stew', 'price': 1350, 'slug': 'beef_stew'},
-            {'name': 'Shepherd’s Pie', 'price': 1200, 'slug': 'shepherds_pie'},
-            {'name': 'Fried Chicken & Waffles', 'price': 1400, 'slug': 'fried_chicken_waffles'},
-            {'name': 'Meatloaf with Gravy', 'price': 1300, 'slug': 'meatloaf_with_gravy'},
-            {'name': 'Spaghetti & Meatballs', 'price': 1150, 'slug': 'spaghetti_meatballs'},
-            {'name': 'Baked Ziti', 'price': 1100, 'slug': 'baked_ziti'},
-            {'name': 'Stuffed Bell Peppers', 'price': 1000, 'slug': 'stuffed_bell_peppers'},
-            {'name': 'Lasagna (beef/veg/chicken)', 'price': 1250, 'slug': 'lasagna'},
-        ],
-        'Rice & Curry Comforts': [
-            {'name': 'Creamy Chicken Curry with Rice', 'price': 1200, 'slug': 'creamy_chicken_curry_with_rice'},
-            {'name': 'Sri Lankan Dhal Curry', 'price': 800, 'slug': 'sri_lankan_dhal_curry'},
-            {'name': 'Coconut Milk Rice with Onion Sambal', 'price': 750, 'slug': 'coconut_milk_rice_with_onion_sambal'},
-            {'name': 'Fried Rice with Egg and Sausage', 'price': 1050, 'slug': 'fried_rice_with_egg_and_sausage'},
-            {'name': 'Kottu Roti (chicken/beef/egg)', 'price': 950, 'slug': 'kottu_roti'},
-        ],
-        'Sandwiches & Wraps': [
-            {'name': 'Grilled Cheese Sandwich', 'price': 700, 'slug': 'grilled_cheese_sandwich'},
-            {'name': 'Philly Cheesesteak', 'price': 1200, 'slug': 'philly_cheesesteak'},
-            {'name': 'Club Sandwich', 'price': 1000, 'slug': 'club_sandwich'},
-            {'name': 'Pulled Pork Sandwich', 'price': 1150, 'slug': 'pulled_pork_sandwich'},
-            {'name': 'Chicken Wrap with Garlic Sauce', 'price': 950, 'slug': 'chicken_wrap_with_garlic_sauce'},
-            {'name': 'Toasted Tuna Melt', 'price': 950, 'slug': 'toasted_tuna_melt'},
-        ],
-        'Sides & Snacks': [
-            {'name': 'Mashed Potatoes with Gravy', 'price': 500, 'slug': 'mashed_potatoes_with_gravy'},
-            {'name': 'French Fries / Wedges / Curly Fries', 'price': 450, 'slug': 'french_fries'},
-            {'name': 'Onion Rings', 'price': 500, 'slug': 'onion_rings'},
-            {'name': 'Coleslaw', 'price': 350, 'slug': 'coleslaw'},
-            {'name': 'Buttered Corn', 'price': 400, 'slug': 'buttered_corn'},
-            {'name': 'Garlic Bread', 'price': 450, 'slug': 'garlic_bread'},
-            {'name': 'Loaded Nachos', 'price': 1100, 'slug': 'loaded_nachos'},
+class MenuView(View):
+    def get(self, request):
+        categories = [
+            ('main-dishes', 'Main Dishes'),
+            ('rice-curry-comforts', 'Rice & Curry'),
+            ('sandwiches-wraps', 'Sandwiches & Wraps'),
+            ('sides-snacks', 'Sides & Snacks')
         ]
-    }
+        return render(request, 'orders/pages/menu.html', {'categories': categories})
 
-    return render(request, 'orders/menu.html', {'menu': menu})
+class DisplayMenuView(View):
+    def get(self, request):
+        # Define categories
+        categories = [
+            ('MAIN', 'Main Dishes'),
+            ('RICE', 'Rice & Curry'),
+            ('SAND', 'Sandwiches & Wraps'),
+            ('SIDE', 'Sides & Snacks')
+        ]
+        
+        # Get filter parameters from request
+        meat_filter = request.GET.get('meat', None)
+        category_filter = request.GET.get('category', None)
+        price_sort = request.GET.get('price_sort', None)
+        
+        # Base queryset
+        menu_items = MenuItem.objects.filter(available=True)
+        
+        # Apply filters if they exist
+        if meat_filter:
+            menu_items = menu_items.filter(meat_category=meat_filter)
+        if category_filter:
+            menu_items = menu_items.filter(category=category_filter)
 
-from django.http import HttpResponse
-from .models import CartItem  # Assuming you have a CartItem model
+        # Apply sorting if specified
+        if price_sort == 'asc':
+            menu_items = menu_items.order_by('price')
+        elif price_sort == 'desc':
+            menu_items = menu_items.order_by('-price')
 
-def view_cart(request):
-    # Get the cart from session or initialize an empty cart
-    cart = request.session.get('cart', {})
+        # Organize menu items by category
+        menu_items_by_category = []
+        for value, name in categories:
+            items = menu_items.filter(category=value)
+            if items.exists():  # Only add categories that have items
+                menu_items_by_category.append((value, name, items))
 
-    # Convert cart data into a list of CartItems or any other necessary representation
-    cart_items = []
-    total_cost = 0
+        context = {
+            'categories': [(value, name) for value, name in categories],
+            'menu_items_by_category': menu_items_by_category,
+            'meat_categories': MenuItem.MEAT_CHOICES,
+            'current_meat_filter': meat_filter,
+            'current_category_filter': category_filter,
+            'current_price_sort': price_sort  # <-- Add this line
+        }
+        
+        return render(request, 'orders/pages/menu.html', context)
+    
+def privacy_policy(request):
+    return render(request, 'orders/legal/privacy_policy.html')
 
-    for item_id, quantity in cart.items():
-        try:
-            item = CartItem.objects.get(id=item_id)
-            cart_items.append({'item': item, 'quantity': quantity})
-            total_cost += item.price * quantity
-        except CartItem.DoesNotExist:
-            continue  # Handle the case where the item does not exist anymore
+def terms_of_service(request):
+    return render(request, 'orders/legal/terms_of_service.html')
 
-    return render(request, 'orders/view_cart.html', {'cart_items': cart_items, 'total_cost': total_cost})
+def refund_policy(request):
+    return render(request, 'orders/legal/refund_policy.html')
 
-from .models import CartItem
+@login_required
+def complete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if order.status != 'completed':
+        order.status = 'completed'
+        order.save()
+    return redirect('order_tracking')
 
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
-from .models import MenuItem
-
-def add_to_cart(request, item_id):
-    cart = request.session.get('cart', {})
-
-    # Ensure item exists
-    item = get_object_or_404(MenuItem, id=item_id)
-
-    # Update quantity in session cart
-    item_id_str = str(item_id)  # keys must be strings for session
-    if item_id_str in cart:
-        cart[item_id_str] += 1
-    else:
-        cart[item_id_str] = 1
-
-    request.session['cart'] = cart
-
-    return HttpResponse("Item added to cart successfully")
-
-
-def remove_from_cart(request, item_id):
-    cart = request.session.get('cart', {})
-
-    # Remove item from the cart if it exists
-    if item_id in cart:
-        del cart[item_id]
-
-    request.session['cart'] = cart
-    return HttpResponse('Item removed from cart')
-
-def checkout(request):
-    cart = request.session.get('cart', {})
-    # Process the cart for payment, etc.
-    # After checkout, clear the cart
-    request.session['cart'] = {}
-    return render(request, 'orders/checkout.html')
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from .forms import UserRegistrationForm
-
-
-
-from django.db import models
-from django.contrib.auth.models import User
-
-class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    date_placed = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Completed', 'Completed')])
-
-    def __str__(self):
-        return f"Order {self.id} - {self.user.username}"
-
-
+@login_required
+def order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'orders/order_details.html', {'order': order})
