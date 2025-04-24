@@ -1,9 +1,6 @@
 from django.core.management.base import BaseCommand
 from orders.models import MenuItem
 
-from django.core.management.base import BaseCommand
-from orders.models import MenuItem
-
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Clear existing items
