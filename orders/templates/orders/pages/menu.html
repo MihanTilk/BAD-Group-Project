@@ -10,7 +10,7 @@
 <div class="container mb-5">
     <form method="get" class="row g-3 align-items-end">
         <!-- Meat Category Dropdown -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label for="meatFilter" class="form-label">Filter by Protein:</label>
             <select name="meat" id="meatFilter" class="form-select">
                 <option value="" {% if not current_meat_filter %}selected{% endif %}>All</option>
@@ -21,7 +21,7 @@
         </div>
 
         <!-- Dish Category Dropdown -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label for="categoryFilter" class="form-label">Filter by Dish Type:</label>
             <select name="category" id="categoryFilter" class="form-select">
                 <option value="" {% if not current_category_filter %}selected{% endif %}>All</option>
@@ -31,8 +31,19 @@
             </select>
         </div>
 
-        <div class="col-12 text-end">
-            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <!-- Price Sorting Dropdown -->
+        <div class="col-md-2">
+            <label for="priceSort" class="form-label">Sort by Price:</label>
+            <select name="price_sort" id="priceSort" class="form-select">
+                <option value="" {% if not current_price_sort %}selected{% endif %}>Default</option>
+                <option value="asc" {% if current_price_sort == 'asc' %}selected{% endif %}>Low to High</option>
+                <option value="desc" {% if current_price_sort == 'desc' %}selected{% endif %}>High to Low</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 text-end">
+            <button type="submit" class="btn btn-primary">Apply</button>
+            <a href="{% url 'orders' %}" class="btn btn-outline-secondary ms-2">Reset</a>
         </div>
     </form>
 </div>
