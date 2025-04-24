@@ -269,24 +269,52 @@ class MenuView(View):
 
 class DisplayMenuView(View):
     def get(self, request):
+        # Define categories
         categories = [
             ('MAIN', 'Main Dishes'),
             ('RICE', 'Rice & Curry'),
             ('SAND', 'Sandwiches & Wraps'),
             ('SIDE', 'Sides & Snacks')
         ]
+        
+        # Get filter parameters from request
+        meat_filter = request.GET.get('meat', None)
+        category_filter = request.GET.get('category', None)
+        price_sort = request.GET.get('price_sort', None)
+        
+        # Base queryset
+        menu_items = MenuItem.objects.filter(available=True)
+        
+        # Apply filters if they exist
+        if meat_filter:
+            menu_items = menu_items.filter(meat_category=meat_filter)
+        if category_filter:
+            menu_items = menu_items.filter(category=category_filter)
+
+        # Apply sorting if specified
+        if price_sort == 'asc':
+            menu_items = menu_items.order_by('price')
+        elif price_sort == 'desc':
+            menu_items = menu_items.order_by('-price')
+
         # Organize menu items by category
         menu_items_by_category = []
         for value, name in categories:
-            items = MenuItem.objects.filter(category=value, available=True).order_by('name')
-            menu_items_by_category.append((value, name, items))
+            items = menu_items.filter(category=value)
+            if items.exists():  # Only add categories that have items
+                menu_items_by_category.append((value, name, items))
 
         context = {
-            'categories': [(value, name) for value, name in categories],  # For the category cards
-            'menu_items_by_category': menu_items_by_category  # For the menu sections
+            'categories': [(value, name) for value, name in categories],
+            'menu_items_by_category': menu_items_by_category,
+            'meat_categories': MenuItem.MEAT_CHOICES,
+            'current_meat_filter': meat_filter,
+            'current_category_filter': category_filter,
+            'current_price_sort': price_sort  # <-- Add this line
         }
+        
         return render(request, 'orders/pages/menu.html', context)
-
+    
 def privacy_policy(request):
     return render(request, 'orders/legal/privacy_policy.html')
 
