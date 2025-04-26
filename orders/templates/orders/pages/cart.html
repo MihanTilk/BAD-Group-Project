@@ -59,6 +59,14 @@
                         <h5>LKR {{ total_cost }}</h5>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <!-- Clear Cart Button -->
+                        <form action="{% url 'clear_cart' %}" method="post" class="me-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Clear Cart
+                            </button>
+                        </form>
+                        <!-- Checkout Button -->
                         <a href="{% url 'checkout' %}" class="btn btn-primary">
                             <i class="bi bi-bag-check"></i> Checkout
                         </a>
