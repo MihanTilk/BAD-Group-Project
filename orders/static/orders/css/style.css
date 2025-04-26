@@ -264,3 +264,70 @@ body {
     opacity: 1;
     transform: scale(1);
 }
+
+/* Dynamic background */
+body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+    background-size: 200% 200%;
+    animation: gradientBG 15s ease infinite;
+    z-index: -1;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.main-content {
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+}
+
+
+/* Uneven page padding fix */
+.main-content {
+    padding-top: 80px; /* Space for fixed navbar */
+    min-height: calc(100vh - 160px); /* Adjust footer space */
+}
+
+/* Page titles */
+.page-title {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Specific checkout page adjustments */
+.checkout-page {
+    padding-top: 100px;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
