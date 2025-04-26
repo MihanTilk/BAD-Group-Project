@@ -307,3 +307,27 @@ body::before {
     padding: 20px;
     position: relative;
 }
+
+
+/* Uneven page padding fix */
+.main-content {
+    padding-top: 80px; /* Space for fixed navbar */
+    min-height: calc(100vh - 160px); /* Adjust footer space */
+}
+
+/* Page titles */
+.page-title {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Specific checkout page adjustments */
+.checkout-page {
+    padding-top: 100px;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
