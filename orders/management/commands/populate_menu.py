@@ -186,7 +186,7 @@ class Command(BaseCommand):
                 'description': 'Creamy mashed potatoes with rich beef gravy',
                 'price': 550.00,
                 'category': 'SIDE',
-                'meat_category': 'BEF',
+                'meat_category': 'VEG',  # Corrected (gravy may contain beef, but mashed potatoes themselves are VEG)
                 'image': 'images/Mashed_Potatoes_with_Gravy.jpg'
             },
             {
@@ -268,7 +268,7 @@ class Command(BaseCommand):
                 'category': 'SAND',
                 'meat_category': 'FIS',
                 'image': 'images/Toasted_Tuna_Melt.jpg'
-            },
+            }
         ]
 
         for item_data in menu_items_data:

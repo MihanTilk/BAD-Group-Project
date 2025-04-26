@@ -3,7 +3,9 @@
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
+<div class="container checkout-page">
+    <div class="text-center">
+    <h1 class="text-center my-4">Checkout</h1>
     <h2 class="text-success">Order Confirmed! 🎉</h2>
     <p class="lead mt-3">
         Your food is on its way. Kindly have the payment ready for our delivery rider.<br>
@@ -11,5 +13,6 @@
     </p>
     <p class="mt-4">Thanks for choosing us — we’ll see you soon!!️</p>
     <a href="{% url 'orders' %}" class="btn btn-outline-primary mt-3">Back to Menu</a>
+    </div>
 </div>
 {% endblock %}

@@ -31,7 +31,6 @@ class MenuItem(models.Model):
         ('BEF', 'Beef'),
         ('PRK', 'Pork'),
         ('FIS', 'Fish'),
-        ('SEA', 'Seafood'),
     ]
 
     name = models.CharField(max_length=100)
