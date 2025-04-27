@@ -38,14 +38,23 @@ class MenuItem(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     category = models.CharField(max_length=4, choices=CATEGORY_CHOICES)
     meat_category = models.CharField(
-    max_length=3,
-    choices=MEAT_CHOICES,
-    default='VEG'
-)  
+        max_length=3,
+        choices=MEAT_CHOICES,
+        default='VEG'
+    )
     image = models.CharField(max_length=100)
     is_special = models.BooleanField(default=False)
     available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(User, related_name='liked_items', blank=True)
+
+    def has_user_liked(self, user):
+        """Check if a specific user has liked this item"""
+        return self.likes.filter(id=user.id).exists()
+
+    @property
+    def like_count(self):
+        return self.likes.count()
 
     def __str__(self):
         return f"{self.name} - {self.get_category_display()}"
