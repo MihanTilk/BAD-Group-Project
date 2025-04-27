@@ -33,11 +33,12 @@
 
         <!-- Price Sorting Dropdown -->
         <div class="col-md-2">
-            <label for="priceSort" class="form-label">Sort by Price:</label>
+            <label for="priceSort" class="form-label">Sort by:</label>
             <select name="price_sort" id="priceSort" class="form-select">
                 <option value="" {% if not current_price_sort %}selected{% endif %}>Default</option>
-                <option value="asc" {% if current_price_sort == 'asc' %}selected{% endif %}>Low to High</option>
-                <option value="desc" {% if current_price_sort == 'desc' %}selected{% endif %}>High to Low</option>
+                <option value="asc" {% if current_price_sort == 'asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="desc" {% if current_price_sort == 'desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="popular" {% if current_price_sort == 'popular' %}selected{% endif %}>Most Liked</option>
             </select>
         </div>
 

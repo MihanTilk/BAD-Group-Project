@@ -297,6 +297,8 @@ class DisplayMenuView(View):
             menu_items = menu_items.order_by('price')
         elif price_sort == 'desc':
             menu_items = menu_items.order_by('-price')
+        elif price_sort == 'popular':
+            menu_items = menu_items.annotate(num_likes=Count('likes')).order_by('-num_likes')
 
         # Organize menu items by category
         menu_items_by_category = []
