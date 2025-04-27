@@ -29,4 +29,5 @@ urlpatterns = [
     path('refund-policy/', views.refund_policy, name='refund_policy'),
     path('order/complete/<int:order_id>/', views.complete_order, name='complete_order'),
     path('order/details/<int:order_id>/', views.order_details, name='order_details'),
+    path('menu/like/<int:item_id>/', views.like_item, name='like_item'),
 ]

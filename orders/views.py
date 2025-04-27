@@ -1,18 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import MenuItem, Cart, CartItem, Order, OrderItem, ContactMessage, Profile
-from .forms import ContactForm, UserProfileForm, CustomUserCreationForm
+from .models import MenuItem, Cart, CartItem, Order, OrderItem
+from .forms import UserProfileForm, CustomUserCreationForm, ContactForm, ProfileEditForm
 from django.http import JsonResponse
 from django.views import View
-from .forms import ProfileEditForm
 from django.core.mail import send_mail, mail_admins
 from django.conf import settings
-from django.shortcuts import render, redirect
-from .forms import ContactForm
-from .models import ContactMessage
+from django.views.decorators.http import require_POST
+from django.db.models import Count
 
 def home(request):
     specials = MenuItem.objects.filter(is_special=True)[:4]
@@ -39,16 +36,20 @@ def cart(request):
         cart = Cart.objects.get(user=request.user)
         cart_items = cart.items.all()
         total = sum(item.total_price for item in cart_items)
-        # Store cart count in session
         request.session['cart_count'] = cart.items.count()
     except Cart.DoesNotExist:
         cart_items = None
         total = 0
         request.session['cart_count'] = 0
 
+    # Get top 7 most liked items using annotation
+    most_liked = MenuItem.objects.annotate(num_likes=Count('likes')) \
+                     .order_by('-num_likes')[:7]
+
     return render(request, 'orders/pages/cart.html', {
         'cart_items': cart_items,
         'total_cost': total,
+        'most_liked': most_liked,
     })
 
 @login_required(login_url='/accounts/login/')
@@ -296,6 +297,8 @@ class DisplayMenuView(View):
             menu_items = menu_items.order_by('price')
         elif price_sort == 'desc':
             menu_items = menu_items.order_by('-price')
+        elif price_sort == 'popular':
+            menu_items = menu_items.annotate(num_likes=Count('likes')).order_by('-num_likes')
 
         # Organize menu items by category
         menu_items_by_category = []
@@ -304,13 +307,26 @@ class DisplayMenuView(View):
             if items.exists():  # Only add categories that have items
                 menu_items_by_category.append((value, name, items))
 
+        # Get IDs of items liked by current user
+        liked_item_ids = []
+        if request.user.is_authenticated:
+            liked_item_ids = list(request.user.liked_items.values_list('id', flat=True))
+
+        # Add is_liked flag to each item
+        for category in menu_items_by_category:
+            for item in category[2]:
+                item.is_liked = item.id in liked_item_ids
+
+
         context = {
             'categories': [(value, name) for value, name in categories],
             'menu_items_by_category': menu_items_by_category,
             'meat_categories': MenuItem.MEAT_CHOICES,
             'current_meat_filter': meat_filter,
             'current_category_filter': category_filter,
-            'current_price_sort': price_sort  # <-- Add this line
+            'current_price_sort': price_sort,
+            'user': request.user,
+            'liked_item_ids': liked_item_ids,
         }
         
         return render(request, 'orders/pages/menu.html', context)
@@ -336,3 +352,18 @@ def complete_order(request, order_id):
 def order_details(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'orders/order_details.html', {'order': order})
+
+@login_required
+@require_POST
+def like_item(request, item_id):
+    menu_item = get_object_or_404(MenuItem, id=item_id)
+    if menu_item.likes.filter(id=request.user.id).exists():
+        menu_item.likes.remove(request.user)
+        liked = False
+    else:
+        menu_item.likes.add(request.user)
+        liked = True
+    return JsonResponse({
+        'liked': liked,
+        'like_count': menu_item.like_count
+    })

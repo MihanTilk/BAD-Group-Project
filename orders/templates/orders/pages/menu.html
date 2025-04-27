@@ -33,11 +33,12 @@
 
         <!-- Price Sorting Dropdown -->
         <div class="col-md-2">
-            <label for="priceSort" class="form-label">Sort by Price:</label>
+            <label for="priceSort" class="form-label">Sort by:</label>
             <select name="price_sort" id="priceSort" class="form-select">
                 <option value="" {% if not current_price_sort %}selected{% endif %}>Default</option>
-                <option value="asc" {% if current_price_sort == 'asc' %}selected{% endif %}>Low to High</option>
-                <option value="desc" {% if current_price_sort == 'desc' %}selected{% endif %}>High to Low</option>
+                <option value="asc" {% if current_price_sort == 'asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="desc" {% if current_price_sort == 'desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="popular" {% if current_price_sort == 'popular' %}selected{% endif %}>Most Liked</option>
             </select>
         </div>
 
@@ -47,7 +48,7 @@
         </div>
     </form>
 </div>
-
+<br>
 <!-- Menu Items by Category -->
 {% for category in menu_items_by_category %}
 <section id="{{ category.0|slugify }}">
@@ -65,6 +66,19 @@
                         </span>
                         <p class="card-text">{{ item.description }}</p>
                         <p class="card-text"><strong>LKR {{ item.price }}</strong></p>
+                    </div>
+                    <div class="mt-2">
+                        {% if user.is_authenticated %}
+                            <button class="btn btn-sm like-btn {% if item.is_liked %}btn-primary{% else %}btn-outline-primary{% endif %}"
+                                    data-item-id="{{ item.id }}">
+                                <i class="far fa-thumbs-up"></i>
+                                <span class="like-count">{{ item.like_count }}</span>
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-sm btn-outline-primary">
+                                <i class="far fa-thumbs-up"></i> {{ item.like_count }}
+                            </a>
+                        {% endif %}
                     </div>
                     <div class="card-footer bg-white border-0">
                         {% if user.is_authenticated %}
@@ -87,4 +101,36 @@
     </div>
 </section>
 {% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle like button clicks
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-item-id');
+            fetch(`/menu/like/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    this.innerHTML = `<i class="fas fa-thumbs-up"></i> <span class="like-count">${data.like_count}</span>`;
+                    this.classList.add('btn-primary');
+                    this.classList.remove('btn-outline-primary');
+                } else {
+                    this.innerHTML = `<i class="far fa-thumbs-up"></i> <span class="like-count">${data.like_count}</span>`;
+                    this.classList.add('btn-outline-primary');
+                    this.classList.remove('btn-primary');
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}
