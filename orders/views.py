@@ -51,7 +51,7 @@ def cart(request):
         'total_cost': total,
     })
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def add_to_cart(request, item_id):
     if request.method == 'POST':
         menu_item = get_object_or_404(MenuItem, id=item_id)
