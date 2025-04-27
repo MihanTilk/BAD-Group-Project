@@ -8,13 +8,9 @@
 {% endblock %}
 
 {% block content %}
-
-
 <!-- Today's Specials -->
-<!-- Carousel Container -->
-<div class="container my-5">
-    <h3 class="text-center mb-4">Today's Specials</h3>
-
+<div class="container mt-0">
+    <h3 class="text-center mb-4">Today's Specials</h3><br>
     <div class="position-relative">
         <!-- Carousel with Items -->
         <div class="horizontal-scroll-wrapper d-flex overflow-hidden" style="scroll-behavior: smooth;">
@@ -96,7 +92,7 @@
         height: 40px;
     }
 </style>
-
+<br>
 <section class="order-now py-5 bg-light">
     <div class="container text-center">
         <a href="{% url 'orders' %}" class="btn btn-primary btn-lg px-4">Go to Menu</a>
