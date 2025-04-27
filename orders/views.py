@@ -8,8 +8,8 @@ from django.http import JsonResponse
 from django.views import View
 from django.core.mail import send_mail, mail_admins
 from django.conf import settings
-from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
+from django.db.models import Count
 
 def home(request):
     specials = MenuItem.objects.filter(is_special=True)[:4]
@@ -36,16 +36,20 @@ def cart(request):
         cart = Cart.objects.get(user=request.user)
         cart_items = cart.items.all()
         total = sum(item.total_price for item in cart_items)
-        # Store cart count in session
         request.session['cart_count'] = cart.items.count()
     except Cart.DoesNotExist:
         cart_items = None
         total = 0
         request.session['cart_count'] = 0
 
+    # Get top 7 most liked items using annotation
+    most_liked = MenuItem.objects.annotate(num_likes=Count('likes')) \
+                     .order_by('-num_likes')[:7]
+
     return render(request, 'orders/pages/cart.html', {
         'cart_items': cart_items,
         'total_cost': total,
+        'most_liked': most_liked,
     })
 
 @login_required(login_url='/accounts/login/')
