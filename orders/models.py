@@ -4,7 +4,8 @@ from django.core.validators import MinValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import EmailValidator
-
+from django.utils import timezone
+from datetime import timedelta
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -91,6 +92,7 @@ class Order(models.Model):
         ('preparing', 'In Progress'),
         ('ready', 'Ready'),
         ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -99,12 +101,22 @@ class Order(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2)
     delivery_address = models.TextField()
     contact_number = models.CharField(max_length=15)
+    cancelled_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Order #{self.id} - {self.user.username}"
 
     class Meta:
         ordering = ['-created_at']
+
+    @property
+    def can_cancel(self):
+        return (self.status in ['preparing', 'ready'] and
+                timezone.now() <= self.created_at + timedelta(minutes=5))
+
+    @property
+    def cancel_deadline(self):
+        return self.created_at + timedelta(minutes=5)
 
 
 class OrderItem(models.Model):

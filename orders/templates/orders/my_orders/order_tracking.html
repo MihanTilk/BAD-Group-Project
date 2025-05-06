@@ -17,12 +17,15 @@
         </div>
         <div class="card-body">
             {% for order in orders %}
-                {% if order.status != 'completed' %}
+                {% if order.status != 'completed' and order.status != 'cancelled' %}
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-5">
                         <h6>Order #{{ order.id }}</h6>
                         <p class="mb-1 text-muted">Placed on {{ order.created_at|date:"M d, Y H:i" }}</p>
                         <p class="mb-0"><strong>Total: LKR {{ order.total }}</strong></p>
+                        {% if order.can_cancel %}
+                        <small class="text-danger">You can cancel this order until {{ order.cancel_deadline|date:"H:i" }}</small>
+                        {% endif %}
                     </div>
                     <div class="col-md-3">
                         <span class="badge rounded-pill bg-{% if order.status == 'ready' %}success{% elif order.status == 'preparing' %}warning{% else %}secondary{% endif %} py-2 px-3">
@@ -32,6 +35,11 @@
                     </div>
                     <div class="col-md-4 text-end">
                         <div class="btn-group" role="group">
+                            {% if order.can_cancel %}
+                            <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger btn-sm me-2">
+                                <i class="fas fa-times-circle me-1"></i>Cancel
+                            </a>
+                            {% endif %}
                             {% if order.status == 'preparing' %}
                             <a href="{% url 'complete_order' order.id %}" class="btn btn-success btn-sm">
                                 <i class="fas fa-check-circle me-1"></i>Mark Complete
@@ -63,17 +71,20 @@
         </div>
         <div class="card-body">
             {% for order in orders %}
-                {% if order.status == 'completed' %}
+                {% if order.status == 'completed' or order.status == 'cancelled' %}
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-5">
                         <h6>Order #{{ order.id }}</h6>
                         <p class="mb-1 text-muted">Placed on {{ order.created_at|date:"M d, Y H:i" }}</p>
                         <p class="mb-0"><strong>Total: LKR {{ order.total }}</strong></p>
+                        {% if order.status == 'cancelled' %}
+                        <small class="text-muted">Cancelled on {{ order.cancelled_at|date:"M d, Y H:i" }}</small>
+                        {% endif %}
                     </div>
                     <div class="col-md-3">
-                        <span class="badge rounded-pill bg-success py-2 px-3">
-                            <i class="fas fa-check-circle me-1"></i>
-                            Completed
+                        <span class="badge rounded-pill bg-{% if order.status == 'completed' %}success{% else %}danger{% endif %} py-2 px-3">
+                            <i class="fas fa-{% if order.status == 'completed' %}check-circle{% else %}times-circle{% endif %} me-1"></i>
+                            {{ order.get_status_display }}
                         </span>
                     </div>
                     <div class="col-md-4 text-end">
