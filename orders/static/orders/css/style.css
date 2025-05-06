@@ -8,6 +8,19 @@ body {
     padding: 0;
 }
 
+.hero-container {
+    position: relative;
+    width: 100%;/
+    margin-bottom: 0;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 /* Navbar */
 .navbar {
     background-color: rgba(11, 13, 28, 0.95) !important;
@@ -157,23 +170,7 @@ form input:focus, form textarea:focus {
     padding: 10px 0;
 }
 
-/* Hero Container */
-.home-page .hero-container {
-    position: relative;
-    width: auto;
-    height: 100vh; /* Full viewport height */
-    margin-top: -60px; /* Pull up to overlap navbar */
-    padding-top: 60px; /* Compensate for fixed navbar */
-}
 
-.home-page .hero-img {
-    width: auto;
-    height: auto;
-}
-
-.hero-container {
-    margin-bottom: 0; /* Remove any bottom margin */
-}
 section.py-5 {
     padding-top: 0 !important; /* Remove top padding from first section */
 }
@@ -308,10 +305,6 @@ section.py-5 {
 
 .dropdown-divider {
     border-color: rgba(220, 159, 41, 0.2);
-}
-
-.text-gold {
-    color: #dc9f29 !important;
 }
 
 .toast {
