@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         specialsSwiper.autoplay.stop();
     }
 
-    // Your existing like button code remains unchanged
     document.querySelectorAll('.like-btn').forEach(button => {
         button.addEventListener('click', function() {
             const itemId = this.getAttribute('data-item-id');
@@ -210,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Custom styling for the swiper to match your design
+// Custom styling for the swiper
 const style = document.createElement('style');
 style.textContent = `
 .specials-swiper {
