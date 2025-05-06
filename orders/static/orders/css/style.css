@@ -10,7 +10,24 @@ body {
 
 /* Navbar */
 .navbar {
-    border-bottom: 1px solid #e0e0e0;
+    background-color: rgba(11, 13, 28, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(220, 159, 41, 0.2);
+    padding: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    background-color: rgba(11, 13, 28, 0.98) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #dc9f29;
+    letter-spacing: 1px;
 }
 
 .navbar-brand img {
@@ -18,8 +35,13 @@ body {
 }
 
 .nav-link {
-    color: #212529;
-    transition: color 0.3s ease;
+    font-family: 'Cormorant', serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    margin: 0 5px;
 }
 
 /* Buttons */
@@ -170,19 +192,126 @@ section.py-5 {
 }
 
 .nav-link:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
+    color: #dc9f29 !important;
+    background-color: rgba(220, 159, 41, 0.1);
 }
 
 .nav-link.active {
-    background-color: #0d6efd;
-    color: white !important;
+    background-color: rgba(220, 159, 41, 0.2) !important;
+    color: #dc9f29 !important;
+    border-bottom: 2px solid #dc9f29;
+}
+
+/* Premium Button Styles */
+.btn-gold {
+    background-color: #dc9f29;
+    color: #0b0d1c;
+    border: none;
+    font-family: 'Cormorant', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+    background-color: #c28d24;
+    color: #0b0d1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 159, 41, 0.3);
+}
+
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
 }
 
 /* Compact footer */
 .footer {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
+    background-color: #0b0d1c !important;
+    border-top: 1px solid rgba(220, 159, 41, 0.2);
+}
+
+.footer h5 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.text-gold {
+    color: #dc9f29 !important;
+}
+
+.footer a:hover {
+    color: #dc9f29 !important;
+    text-decoration: none;
+    padding-left: 5px;
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: rgba(220, 159, 41, 0.2);
+    transform: translateY(-3px);
+}
+
+/* Form Styles */
+.form-control.bg-dark {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.form-control.bg-dark:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #dc9f29 !important;
+    box-shadow: 0 0 0 0.25rem rgba(220, 159, 41, 0.25) !important;
+}
+
+/* Badge Styles */
+.badge.bg-gold {
+    background-color: #dc9f29 !important;
+    color: #0b0d1c !important;
+    font-weight: 600;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    background-color: #1a1c2e;
+    border: 1px solid rgba(220, 159, 41, 0.2);
+}
+
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Cormorant', serif;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(220, 159, 41, 0.2);
+    color: #dc9f29;
+}
+
+.dropdown-divider {
+    border-color: rgba(220, 159, 41, 0.2);
+}
+
+.text-gold {
+    color: #dc9f29 !important;
 }
 
 .toast {
