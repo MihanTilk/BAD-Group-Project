@@ -6,12 +6,11 @@
 {% block content %}
 
 <!-- Filter Section -->
-<div class="container">
-    <h1 class="page-title text-center" style="padding-top: 40px;
-    font-family: 'Cormorant Garamond';
+<div class="container" style="padding-top: 50px;">
+    <h1 class="page-title text-center" style="font-family: 'Cormorant Garamond';
     font-weight: 600;
     font-size: 4rem;
-    color: #3a2e1e;
+    color: #dc9f29;
     letter-spacing: 1px;
     text-align: center;
     margin: 20px 0 15px;
@@ -53,7 +52,7 @@
 
         <div class="col-md-2 text-end">
             <button type="submit" class="btn btn-primary">Apply</button>
-            <a href="{% url 'orders' %}" class="btn btn-outline-secondary ms-2">Reset</a>
+            <a href="{% url 'orders' %}" class="btn btn-outline-secondary ms-2" style="background-color: #b80816; border-color: #a3242f; color: #ffffff">Reset</a>
         </div>
     </form>
 </div>
@@ -64,17 +63,17 @@
     <h2 class="text-center" style="font-family: 'Cormorant Garamond';
     font-weight: 600;
     font-size: 2.2rem;
-    color: #3a2e1e;
+    color: #dc9f29;
     letter-spacing: 1px;
     text-align: center;
     margin: 20px 0 15px;
     text-transform: uppercase;
-    " >{{ category.1 }}</h2><hr>
+    " >{{ category.1 }}</h2><hr style="color: #F5EAB9FF">
     <div class="container my-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for item in category.2 %}
             <div class="col">
-                <div class="card shadow h-100">
+                <div class="card shadow h-100" style="background-color: #fff5c8; border: none">
                     <img src="{% static item.image %}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ item.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
@@ -84,7 +83,7 @@
                         <p class="card-text">{{ item.description }}</p>
                         <p class="card-text"><strong>LKR {{ item.price }}</strong></p>
                     </div>
-                    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                    <div class="card-footer border-0 d-flex justify-content-between align-items-center" style="background-color: #f5eab9;">
                         {% if user.is_authenticated %}
                             <form action="{% url 'add_to_cart' item_id=item.id %}" method="post" class="me-2 mb-0 flex-grow-1">
                                 {% csrf_token %}
@@ -98,14 +97,16 @@
                                 <span class="like-count">{{ item.like_count }}</span>
                             </button>
                         {% else %}
-                            <div class="d-flex justify-content-between w-100">
-                                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary me-2 w-100">
+                            <form action="{% url 'login' %}?next={{ request.path }}" method="get" class="me-2 mb-0 flex-grow-1">
+                                <button type="submit" class="btn btn-primary w-100">
                                     <i class="fas fa-cart-plus me-2"></i> Add to Cart
-                                </a>
-                                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="far fa-thumbs-up"></i> {{ item.like_count }}
-                                </a>
-                            </div>
+                                </button>
+                            </form>
+                            <a href="{% url 'login' %}?next={{ request.path }}" 
+                               class="btn btn-sm {% if item.is_liked %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                                <i class="far fa-thumbs-up"></i>
+                                <span class="like-count">{{ item.like_count }}</span>
+                            </a>
                         {% endif %}
                     </div>                    
                 </div>

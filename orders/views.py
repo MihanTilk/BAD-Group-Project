@@ -283,7 +283,7 @@ class DisplayMenuView(View):
         category_filter = request.GET.get('category', None)
         price_sort = request.GET.get('price_sort', None)
         
-        # Base queryset
+        # Base queryset 
         menu_items = MenuItem.objects.filter(available=True)
         
         # Apply filters if they exist
