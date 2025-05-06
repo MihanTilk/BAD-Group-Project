@@ -1,7 +1,8 @@
 /* General Styles */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #0b0d1c;
     color: #212529;
     margin: 0;
     padding: 0;
@@ -242,11 +243,9 @@ section.py-5 {
 }
 
 .main-content {
-    background-color: rgba(255, 255, 255, 0.92);
+    background-color: rgba(0, 0, 0, 0.92);
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    margin: 20px auto;
-    padding: 20px;
     position: relative;
 }
 
@@ -258,3 +257,87 @@ section.py-5 {
     border-bottom: 1px solid #eee;
 }
 
+.form-label {
+    color: white;
+}
+
+hr {
+    border-color: #ffa800;
+}
+
+/* Card Appearance */
+
+/* Card Typography */
+.card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #3a2e1e;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.card-text {
+    font-family: 'Cormorant', serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #3a2e1e;
+}
+
+.card-text strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    color: #dc9f29;
+    font-size: 1.1rem;
+}
+
+.card-text em {
+    font-style: italic;
+    color: #5a4a30;
+}
+
+/* Card Structure */
+.card {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #dc9f29;
+    border-color: #dc9f29;
+    color: #fff;
+    font-family: 'Cormorant', serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+    background-color: #c28d24;
+    border-color: #c28d24;
+}
+
+/* Like Button */
+.like-btn {
+    font-family: 'Cormorant', serif;
+    min-width: 40px;
+}
+
+/* Review Cards */
+.review-card .card-text {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    color: #3a2e1e;
+}
+
+.review-card .text-muted {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    color: #5a4a30 !important;
+}
