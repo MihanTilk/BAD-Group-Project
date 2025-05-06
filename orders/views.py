@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Count
 
 def home(request):
-    specials = MenuItem.objects.filter(is_special=True)[:4]
+    specials = MenuItem.objects.filter(is_special=True)
     categories = MenuItem.CATEGORY_CHOICES
     return render(request, 'orders/pages/home.html', {
         'specials': specials,
