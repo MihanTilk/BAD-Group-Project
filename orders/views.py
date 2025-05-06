@@ -10,6 +10,7 @@ from django.core.mail import send_mail, mail_admins
 from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.db.models import Count
+from django.utils import timezone
 
 def home(request):
     specials = MenuItem.objects.filter(is_special=True)
@@ -167,7 +168,10 @@ def order_success(request, order_id):
 @login_required
 def order_tracking(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'orders/my_orders/order_tracking.html', {'orders': orders})
+    return render(request, 'orders/my_orders/order_tracking.html', {
+        'orders': orders,
+        'now': timezone.now()
+    })
 
 def contact_view(request):
     if request.method == 'POST':
@@ -367,3 +371,18 @@ def like_item(request, item_id):
         'liked': liked,
         'like_count': menu_item.like_count
     })
+
+
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.can_cancel:
+        order.status = 'cancelled'
+        order.cancelled_at = timezone.now()
+        order.save()
+        messages.success(request, "Your order has been cancelled.")
+    else:
+        messages.error(request, "This order can no longer be cancelled.")
+
+    return redirect('order_tracking')
