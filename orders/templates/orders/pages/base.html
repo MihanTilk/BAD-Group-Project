@@ -8,6 +8,7 @@
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -17,33 +18,34 @@
 
 <body>
     <!-- Fixed Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-overlay">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'images/logo.png' %}" alt="Logo" height="40">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" height="40" class="me-2">
+                <span class="brand-name">Warm & Whisked</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'orders' %}active{% endif %}" href="{% url 'orders' %}">Menu</a>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'orders' %}active{% endif %}" href="{% url 'orders' %}">Menu</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'cart' %}active{% endif %}" href="{% url 'cart' %}">View Cart</a>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'cart' %}active{% endif %}" href="{% url 'cart' %}">View Cart</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'help' %}active{% endif %}" href="{% url 'help' %}">Help</a>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'help' %}active{% endif %}" href="{% url 'help' %}">Help</a>
                     </li>
                 </ul>
-                <div class="d-flex">
-                    <a href="{% url 'cart' %}" class="btn btn-outline-primary position-relative me-3">
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'cart' %}" class="btn btn-outline-light position-relative me-3">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count"
+                        <span class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-gold" id="cart-count"
                               style="display: {% if request.session.cart_count|default:0 > 0 %}inline-block{% else %}none{% endif %};">
                             {% if request.session.cart_count|default:0 > 0 %}
                                 {{ request.session.cart_count }}
@@ -52,10 +54,10 @@
                     </a>
                     {% if user.is_authenticated %}
                         <div class="dropdown">
-                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                            <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-2"></i> {{ user.username }}
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
                                 <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i>Profile</a></li>
                                 <li><a class="dropdown-item" href="{% url 'order_tracking' %}"><i class="fas fa-clipboard-list me-2"></i>My Orders</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -70,8 +72,8 @@
                             </ul>
                         </div>
                     {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
-                        <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+                        <a href="{% url 'signup' %}" class="btn btn-gold">Sign Up</a>
                     {% endif %}
                 </div>
             </div>
@@ -98,47 +100,23 @@
     {% block content %}{% endblock %}
 </main>
 
-
-<hr class="my-4">
-
     <!-- Footer -->
-<footer class="footer bg-light py-5">
+<footer class="footer bg-dark text-light py-5">
     <div class="container">
-        <div class="row">
-            <!-- Legal -->
-            <div class="col-lg-3 col-md-6 mb-4 mb-md-0 order-1">
-                <h5 class="mb-3">Legal</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <a href="{% url 'privacy_policy' %}" class="text-decoration-none">Privacy Policy</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="{% url 'terms_of_service' %}" class="text-decoration-none">Terms of Service</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="{% url 'refund_policy' %}" class="text-decoration-none">Refund Policy</a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Sitemap center -->
-            <div class="col-lg-2 col-md-6 mb-4 mb-md-0 order-2">
-                <h5 class="mb-3">Sitemap</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
-                    <li class="mb-2"><a href="{% url 'orders' %}" class="text-decoration-none">Menu</a></li>
-                    <li class="mb-2"><a href="{% url 'cart' %}" class="text-decoration-none">View Cart</a></li>
-                    <li class="mb-2"><a href="{% url 'help' %}" class="text-decoration-none">Help</a></li>
-                </ul>
-            </div>
-
-            <!-- Brand info center -->
-            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0 order-3">
-                <img src="{% static 'images/logo.png' %}" alt="Warm & Whisked" height="50" class="mb-3">
-                <p class="text-muted">
-                    <i class="fas fa-phone me-2"></i> (+94) 772828288<br>
-                    <i class="fas fa-envelope me-2"></i> info@warmandwhisked.lk
+        <div class="row g-4">
+            <!-- Brand info -->
+            <div class="col-lg-4 col-md-6 order-lg-1 order-1">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{% static 'images/logo.png' %}" alt="Warm & Whisked" height="50" class="me-2">
+                    <h4 class="mb-0 brand-name" style = "font-family: 'Cormorant', serif; color:#dc9f29">Warm & Whisked</h4>
+                </div>
+                <p class="mb-3" style="color: white; font-style: italic">
+                    Premium bakery delivering artisanal treats to your doorstep.
                 </p>
+                <div class="text mb-3">
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i> (+94) 772828288</p>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i> info@warmandwhisked.lk</p>
+                </div>
                 <div class="social-icons">
                     <a href="https://www.facebook.com/profile.php?id=61574591783072" class="text-decoration-none me-3" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-facebook-f"></i>
@@ -149,31 +127,54 @@
                 </div>
             </div>
 
-            <!-- Replace the existing contact form section with this -->
-            <div class="col-lg-4 col-md-6 order-lg-4 order-4">
-                <h5 class="mb-3">Contact Us</h5>
+            <!-- Sitemap -->
+            <div class="col-lg-2 col-md-6 order-lg-2 order-3">
+                <h5 class="mb-3 text-gold">Explore</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'home' %}" class="text-decoration-none text-light">Home</a></li>
+                    <li class="mb-2"><a href="{% url 'orders' %}" class="text-decoration-none text-light">Menu</a></li>
+                    <li class="mb-2"><a href="{% url 'cart' %}" class="text-decoration-none text-light">View Cart</a></li>
+                    <li class="mb-2"><a href="{% url 'help' %}" class="text-decoration-none text-light">Help</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal -->
+            <div class="col-lg-2 col-md-6 order-lg-3 order-4">
+                <h5 class="mb-3 text-gold">Legal</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="{% url 'privacy_policy' %}" class="text-decoration-none text-light">Privacy Policy</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'terms_of_service' %}" class="text-decoration-none text-light">Terms of Service</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'refund_policy' %}" class="text-decoration-none text-light">Refund Policy</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-4 col-md-6 order-lg-4 order-2">
+                <h5 class="mb-3 text-gold">Contact Us</h5>
                 <form method="post" action="{% url 'contact' %}">
                     {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" name="name" placeholder="Full Name" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="email" class="form-control" name="email" placeholder="Email" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <textarea class="form-control h-100" name="message" placeholder="Your Message" required></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control bg-dark text-light border-secondary" name="name" placeholder="Full Name" required>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+                    <div class="mb-3">
+                        <input type="email" class="form-control bg-dark text-light border-secondary" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control bg-dark text-light border-secondary" name="message" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-gold w-100">Send Message</button>
                 </form>
             </div>
         </div>
-        <hr class="my-4">
+        <hr class="my-4 border-secondary">
         <div class="text-center">
-            <p class="text-muted mb-0">&copy; 2025 Warm & Whisked. All rights reserved.</p>
+            <p class="text mb-0" style="color: #dc9f29">&copy; 2025 Warm & Whisked. All rights reserved.</p>
         </div>
     </div>
 </footer>

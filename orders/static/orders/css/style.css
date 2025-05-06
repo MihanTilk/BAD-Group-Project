@@ -1,7 +1,8 @@
 /* General Styles */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #0b0d1c;
     color: #212529;
     margin: 0;
     padding: 0;
@@ -9,7 +10,24 @@ body {
 
 /* Navbar */
 .navbar {
-    border-bottom: 1px solid #e0e0e0;
+    background-color: rgba(11, 13, 28, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(220, 159, 41, 0.2);
+    padding: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    background-color: rgba(11, 13, 28, 0.98) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #dc9f29;
+    letter-spacing: 1px;
 }
 
 .navbar-brand img {
@@ -17,12 +35,13 @@ body {
 }
 
 .nav-link {
-    color: #212529;
-    transition: color 0.3s ease;
-}
-
-.nav-link.active, .nav-link:hover {
-    color: #0d6efd;
+    font-family: 'Cormorant', serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    margin: 0 5px;
 }
 
 /* Buttons */
@@ -126,7 +145,7 @@ form input:focus, form textarea:focus {
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-/* Navbar Overlay - Make it always fixed */
+/* Navbar Overlay - Fixed */
 .navbar-overlay {
     position: fixed;
     top: 0;
@@ -138,7 +157,7 @@ form input:focus, form textarea:focus {
     padding: 10px 0;
 }
 
-/* Hero Container - Only for home page */
+/* Hero Container */
 .home-page .hero-container {
     position: relative;
     width: auto;
@@ -164,25 +183,6 @@ section.py-5 {
     padding-top: 80px; /* Space for fixed navbar */
 }
 
-/* Reset body margin */
-body {
-    margin: 0;
-    padding: 0;
-}
-
-/* Fixed Navbar Overlay */
-.navbar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* Ensure it stays above hero image */
-    background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px 0;
-    transition: all 0.3s ease;
-}
-
 /* Navbar link styling */
 .nav-link {
     padding: 8px 15px;
@@ -192,19 +192,126 @@ body {
 }
 
 .nav-link:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
+    color: #dc9f29 !important;
+    background-color: rgba(220, 159, 41, 0.1);
 }
 
 .nav-link.active {
-    background-color: #0d6efd;
-    color: white !important;
+    background-color: rgba(220, 159, 41, 0.2) !important;
+    color: #dc9f29 !important;
+    border-bottom: 2px solid #dc9f29;
+}
+
+/* Premium Button Styles */
+.btn-gold {
+    background-color: #dc9f29;
+    color: #0b0d1c;
+    border: none;
+    font-family: 'Cormorant', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+    background-color: #c28d24;
+    color: #0b0d1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 159, 41, 0.3);
+}
+
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
 }
 
 /* Compact footer */
 .footer {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
+    background-color: #0b0d1c !important;
+    border-top: 1px solid rgba(220, 159, 41, 0.2);
+}
+
+.footer h5 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.text-gold {
+    color: #dc9f29 !important;
+}
+
+.footer a:hover {
+    color: #dc9f29 !important;
+    text-decoration: none;
+    padding-left: 5px;
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: rgba(220, 159, 41, 0.2);
+    transform: translateY(-3px);
+}
+
+/* Form Styles */
+.form-control.bg-dark {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.form-control.bg-dark:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #dc9f29 !important;
+    box-shadow: 0 0 0 0.25rem rgba(220, 159, 41, 0.25) !important;
+}
+
+/* Badge Styles */
+.badge.bg-gold {
+    background-color: #dc9f29 !important;
+    color: #0b0d1c !important;
+    font-weight: 600;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    background-color: #1a1c2e;
+    border: 1px solid rgba(220, 159, 41, 0.2);
+}
+
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Cormorant', serif;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(220, 159, 41, 0.2);
+    color: #dc9f29;
+}
+
+.dropdown-divider {
+    border-color: rgba(220, 159, 41, 0.2);
+}
+
+.text-gold {
+    color: #dc9f29 !important;
 }
 
 .toast {
@@ -223,7 +330,6 @@ body {
 }
 
 .cart-counter, #cart-count {
-    /* Changed from 'none' to match your template logic */
     display: inline-block;
     min-width: 20px;
     height: 20px;
@@ -265,54 +371,11 @@ body {
     transform: scale(1);
 }
 
-/* Dynamic background */
-body {
-    margin: 0;
-    padding: 0;
-    position: relative;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
-    background-size: 200% 200%;
-    animation: gradientBG 15s ease infinite;
-    z-index: -1;
-}
-
-@keyframes gradientBG {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
 .main-content {
-    background-color: rgba(255, 255, 255, 0.92);
+    background-color: rgba(0, 0, 0, 0.92);
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    margin: 20px auto;
-    padding: 20px;
     position: relative;
-}
-
-
-/* Uneven page padding fix */
-.main-content {
-    padding-top: 80px; /* Space for fixed navbar */
-    min-height: calc(100vh - 160px); /* Adjust footer space */
 }
 
 /* Page titles */
@@ -323,11 +386,87 @@ body::before {
     border-bottom: 1px solid #eee;
 }
 
-/* Specific checkout page adjustments */
-.checkout-page {
-    padding-top: 100px;
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.form-label {
+    color: white;
+}
+
+hr {
+    border-color: #ffa800;
+}
+
+/* Card Appearance */
+
+/* Card Typography */
+.card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #3a2e1e;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.card-text {
+    font-family: 'Cormorant', serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #3a2e1e;
+}
+
+.card-text strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    color: #dc9f29;
+    font-size: 1.1rem;
+}
+
+.card-text em {
+    font-style: italic;
+    color: #5a4a30;
+}
+
+/* Card Structure */
+.card {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #dc9f29;
+    border-color: #dc9f29;
+    color: #fff;
+    font-family: 'Cormorant', serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+    background-color: #c28d24;
+    border-color: #c28d24;
+}
+
+/* Like Button */
+.like-btn {
+    font-family: 'Cormorant', serif;
+    min-width: 40px;
+}
+
+/* Review Cards */
+.review-card .card-text {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    color: #3a2e1e;
+}
+
+.review-card .text-muted {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    color: #5a4a30 !important;
 }
