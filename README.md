@@ -48,19 +48,19 @@ Add payment gateway integration for online payments.
 
 User Interface Wireframe (created using Figma):
 Home Page:
-![Home_Page_Wireframe1.png](..%2F..%2F..%2FDownloads%2FHome_Page_Wireframe1.png)
+![Home_Page_Wireframe1](https://github.com/user-attachments/assets/7edb0c27-6cdd-4e6c-a027-7d21a373a339)
 
 Menu Page:
-![Menu_Page_Wireframe2.png](..%2F..%2F..%2FDownloads%2FMenu_Page_Wireframe2.png)
+![Menu_Page_Wireframe2](https://github.com/user-attachments/assets/ba730628-a81d-43b0-a4d5-2881be68de2c)
 
 Cart Page:
-![Cart_Page_Wireframe3.png](..%2F..%2F..%2FDownloads%2FCart_Page_Wireframe3.png)
+![Cart_Page_Wireframe3](https://github.com/user-attachments/assets/062a0dbd-6754-4519-b61b-a01ddc617bc2)
 
 Help Page:
-![Help_Page_Wireframe4.png](..%2F..%2F..%2FDownloads%2FHelp_Page_Wireframe4.png)
+![Help_Page_Wireframe4](https://github.com/user-attachments/assets/35308048-6ab5-476c-a8e2-09da7baa5a6e)
 
 Profile Page:
-![Profile_Page_Wireframe5.png](..%2F..%2F..%2FDownloads%2FProfile_Page_Wireframe5.png)
+![Profile_Page_Wireframe5](https://github.com/user-attachments/assets/04704dd4-5261-4606-abbd-3636323e6618)
 
 My Orders Page:
-![My_Orders_Page_Wireframe6.png](..%2F..%2F..%2FDownloads%2FMy_Orders_Page_Wireframe6.png)
+![My_Orders_Page_Wireframe6](https://github.com/user-attachments/assets/a6476461-df78-4d97-bb5e-0158af99df8f)
